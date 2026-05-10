@@ -79,13 +79,13 @@ export default function Home() {
       <main className="min-h-screen bg-stone-950">
 
         {/* Nav */}
-        <nav className="border-b border-stone-800/60 px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
+        <nav className="border-b border-stone-800/60 px-4 sm:px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
           <Logo size="lg" />
-          <div className="flex items-center gap-6">
-            <Link href="/pricing" className="text-stone-500 hover:text-stone-200 text-sm transition-colors">Pricing</Link>
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link href="/pricing" className="hidden sm:inline text-stone-500 hover:text-stone-200 text-sm transition-colors">Pricing</Link>
             <Link href="/sign-in" className="text-stone-500 hover:text-stone-200 text-sm transition-colors">Sign In</Link>
             <Link href="/start">
-              <button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm px-4 py-2 rounded-lg transition-colors">
+              <button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
                 Build My Resume
               </button>
             </Link>
@@ -93,46 +93,46 @@ export default function Home() {
         </nav>
 
         {/* Hero */}
-        <section className="px-6 pt-20 pb-24">
-          <div className="max-w-6xl mx-auto grid grid-cols-2 gap-20 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 border border-stone-700 text-stone-400 text-xs font-medium px-3 py-1.5 rounded-full mb-8">
+        <section className="px-4 sm:px-6 pt-12 sm:pt-20 pb-16 sm:pb-24">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+            <div className="text-center md:text-left order-2 md:order-1">
+              <div className="inline-flex items-center gap-2 border border-stone-700 text-stone-400 text-[11px] sm:text-xs font-medium px-3 py-1.5 rounded-full mb-6 sm:mb-8">
                 <span className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
-                Used by professionals at Google, Stripe & more
+                Used by professionals at Google, Stripe &amp; more
               </div>
-              <h1 className="text-[52px] leading-[1.08] font-normal text-stone-100 mb-6" style={{ fontFamily: 'var(--font-serif)' }}>
+              <h1 className="text-[36px] sm:text-[44px] md:text-[52px] leading-[1.08] font-normal text-stone-100 mb-5 sm:mb-6" style={{ fontFamily: 'var(--font-serif)' }}>
                 The resume that<br />
                 <em style={{ fontStyle: 'italic', color: '#FBBF24' }}>finally does you justice</em>
               </h1>
-              <p className="text-stone-400 text-lg mb-10 leading-relaxed max-w-md">
+              <p className="text-stone-400 text-base sm:text-lg mb-8 sm:mb-10 leading-relaxed md:max-w-md mx-auto md:mx-0">
                 You&apos;re more impressive than your current resume shows. ResumeGenius rewrites your experience into language that gets responses — polished PDF in minutes.
               </p>
-              <div className="flex items-center gap-5 mb-12">
-                <Link href="/start">
-                  <button className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-base px-7 py-3.5 rounded-lg transition-colors">
+              <div className="flex flex-col sm:flex-row items-center md:items-center md:justify-start gap-4 sm:gap-5 mb-10 sm:mb-12">
+                <Link href="/start" className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-base px-7 py-3.5 rounded-lg transition-colors">
                     Build My Resume <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
                 <span className="text-stone-600 text-sm">Free to build · Pay to download</span>
               </div>
-              <div className="flex items-center gap-8">
+              <div className="flex items-center justify-center md:justify-start gap-4 sm:gap-8">
                 <div>
-                  <div className="text-2xl font-bold text-stone-100">5 min</div>
-                  <div className="text-stone-500 text-xs mt-0.5">average to finish</div>
+                  <div className="text-xl sm:text-2xl font-bold text-stone-100">5 min</div>
+                  <div className="text-stone-500 text-[10px] sm:text-xs mt-0.5">average to finish</div>
                 </div>
                 <div className="w-px h-8 bg-stone-800" />
                 <div>
-                  <div className="text-2xl font-bold text-stone-100">4.9★</div>
-                  <div className="text-stone-500 text-xs mt-0.5">from 2,100+ users</div>
+                  <div className="text-xl sm:text-2xl font-bold text-stone-100">4.9★</div>
+                  <div className="text-stone-500 text-[10px] sm:text-xs mt-0.5">2,100+ users</div>
                 </div>
                 <div className="w-px h-8 bg-stone-800" />
                 <div>
-                  <div className="text-2xl font-bold text-stone-100">$29</div>
-                  <div className="text-stone-500 text-xs mt-0.5">monthly · cancel anytime</div>
+                  <div className="text-xl sm:text-2xl font-bold text-stone-100">$1</div>
+                  <div className="text-stone-500 text-[10px] sm:text-xs mt-0.5">7-day trial</div>
                 </div>
               </div>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center order-1 md:order-2">
               <ResumeMockup />
             </div>
           </div>
@@ -162,11 +162,11 @@ export default function Home() {
         </section>
 
         {/* How it works */}
-        <section className="py-28 px-6">
+        <section className="py-16 sm:py-28 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-16">
-              <div className="text-amber-500 text-xs font-semibold uppercase tracking-[0.2em] mb-4">How It Works</div>
-              <h2 className="text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>
+            <div className="mb-10 sm:mb-16">
+              <div className="text-amber-500 text-xs font-semibold uppercase tracking-[0.2em] mb-3 sm:mb-4">How It Works</div>
+              <h2 className="text-3xl sm:text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>
                 Done in the time it takes<br /><em style={{ fontStyle: 'italic' }}>to make coffee</em>
               </h2>
             </div>
@@ -176,11 +176,11 @@ export default function Home() {
                 { n: '02', title: 'We rewrite it', desc: 'Click ✦ on any bullet and watch it become a specific, quantified achievement that recruiters actually stop to read.' },
                 { n: '03', title: 'Download and apply', desc: 'Pay once and get a clean, perfectly formatted PDF. No subscription trap — just your resume, ready to go.' },
               ].map((s, idx) => (
-                <div key={s.n} className={`flex gap-10 py-10 ${idx < 2 ? 'border-b border-stone-800/60' : ''}`}>
-                  <div className="text-[56px] font-bold leading-none text-stone-800 w-20 flex-shrink-0 select-none" style={{ fontFamily: 'var(--font-serif)' }}>{s.n}</div>
-                  <div className="pt-2">
-                    <h3 className="text-xl font-semibold text-stone-200 mb-2">{s.title}</h3>
-                    <p className="text-stone-500 leading-relaxed max-w-lg">{s.desc}</p>
+                <div key={s.n} className={`flex gap-5 sm:gap-10 py-7 sm:py-10 ${idx < 2 ? 'border-b border-stone-800/60' : ''}`}>
+                  <div className="text-[36px] sm:text-[56px] font-bold leading-none text-stone-800 w-12 sm:w-20 flex-shrink-0 select-none" style={{ fontFamily: 'var(--font-serif)' }}>{s.n}</div>
+                  <div className="pt-1 sm:pt-2">
+                    <h3 className="text-lg sm:text-xl font-semibold text-stone-200 mb-2">{s.title}</h3>
+                    <p className="text-sm sm:text-base text-stone-500 leading-relaxed max-w-lg">{s.desc}</p>
                   </div>
                 </div>
               ))}
@@ -196,14 +196,14 @@ export default function Home() {
         </section>
 
         {/* Before / After */}
-        <section className="py-28 px-6 bg-stone-900/40 border-y border-stone-800/60">
+        <section className="py-16 sm:py-28 px-4 sm:px-6 bg-stone-900/40 border-y border-stone-800/60">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-16">
-              <div className="text-amber-500 text-xs font-semibold uppercase tracking-[0.2em] mb-4">The Difference</div>
-              <h2 className="text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>
+            <div className="mb-10 sm:mb-16">
+              <div className="text-amber-500 text-xs font-semibold uppercase tracking-[0.2em] mb-3 sm:mb-4">The Difference</div>
+              <h2 className="text-3xl sm:text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>
                 What your bullets look like<br /><em style={{ fontStyle: 'italic' }}>before and after</em>
               </h2>
-              <p className="text-stone-500 mt-4 max-w-lg">This is the actual output — no cherry picking. Every bullet gets the same treatment.</p>
+              <p className="text-stone-500 mt-4 max-w-lg text-sm sm:text-base">This is the actual output — no cherry picking. Every bullet gets the same treatment.</p>
             </div>
             <div className="space-y-6">
               {[
@@ -220,12 +220,12 @@ export default function Home() {
                   after: 'Redesigned the support workflow from scratch, reducing average resolution time from 3 days to 4 hours and lifting CSAT scores from 71% to 94%',
                 },
               ].map((item, i) => (
-                <div key={i} className="grid grid-cols-2 gap-4">
-                  <div className="bg-stone-900 border border-stone-800 rounded-xl p-5">
+                <div key={i} className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="bg-stone-900 border border-stone-800 rounded-xl p-4 sm:p-5">
                     <div className="text-[10px] font-bold uppercase tracking-widest text-stone-600 mb-3">Before</div>
                     <p className="text-stone-500 text-sm leading-relaxed">{item.before}</p>
                   </div>
-                  <div className="bg-stone-900 border border-amber-500/20 rounded-xl p-5 relative">
+                  <div className="bg-stone-900 border border-amber-500/20 rounded-xl p-4 sm:p-5 relative">
                     <div className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-3">After</div>
                     <p className="text-stone-300 text-sm leading-relaxed">{item.after}</p>
                     <div className="absolute top-4 right-4">
@@ -243,13 +243,13 @@ export default function Home() {
         <HomeDemoSection />
 
         {/* Features */}
-        <section className="py-28 px-6">
+        <section className="py-16 sm:py-28 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-16">
-              <h2 className="text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>Built differently</h2>
-              <p className="text-stone-500 mt-3 text-base">Most resume tools want you to do the work. We do it for you.</p>
+            <div className="mb-10 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>Built differently</h2>
+              <p className="text-stone-500 mt-3 text-sm sm:text-base">Most resume tools want you to do the work. We do it for you.</p>
             </div>
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
               {[
                 { label: 'Writes like a human', desc: 'The rewritten bullets sound like a senior recruiter wrote them — specific, confident, and free of filler words.' },
                 { label: 'Clears the filters', desc: 'Laid out and worded to pass the automated screening most companies run before a human sees anything.' },
@@ -266,15 +266,15 @@ export default function Home() {
         </section>
 
         {/* Who it's for */}
-        <section className="py-28 px-6 bg-stone-900/40 border-y border-stone-800/60">
+        <section className="py-16 sm:py-28 px-4 sm:px-6 bg-stone-900/40 border-y border-stone-800/60">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-16">
-              <div className="text-amber-500 text-xs font-semibold uppercase tracking-[0.2em] mb-4">Who It&apos;s For</div>
-              <h2 className="text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>
+            <div className="mb-10 sm:mb-16">
+              <div className="text-amber-500 text-xs font-semibold uppercase tracking-[0.2em] mb-3 sm:mb-4">Who It&apos;s For</div>
+              <h2 className="text-3xl sm:text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>
                 Works for wherever<br /><em style={{ fontStyle: 'italic' }}>you are in your career</em>
               </h2>
             </div>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
               {[
                 {
                   title: 'Recent graduates',
@@ -308,16 +308,16 @@ export default function Home() {
         </section>
 
         {/* Testimonials */}
-        <section className="py-28 px-6">
+        <section className="py-16 sm:py-28 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-16">
+            <div className="mb-10 sm:mb-16">
               <div className="flex items-center gap-2 mb-4">
                 {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 <span className="text-stone-400 text-sm ml-1 font-medium">4.9 · 2,100+ reviews</span>
               </div>
-              <h2 className="text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>People are getting hired</h2>
+              <h2 className="text-3xl sm:text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>People are getting hired</h2>
             </div>
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
               {testimonials.map((t) => (
                 <div key={t.name} className="bg-stone-900/60 border border-stone-800/60 rounded-xl p-6">
                   <div className="flex mb-4">
@@ -335,10 +335,10 @@ export default function Home() {
         </section>
 
         {/* FAQ */}
-        <section className="py-28 px-6">
+        <section className="py-16 sm:py-28 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
-            <div className="mb-16">
-              <h2 className="text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>Questions people ask<br /><em style={{ fontStyle: 'italic' }}>before they try it</em></h2>
+            <div className="mb-10 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>Questions people ask<br /><em style={{ fontStyle: 'italic' }}>before they try it</em></h2>
             </div>
             <div className="space-y-0">
               {[
@@ -377,43 +377,23 @@ export default function Home() {
         </section>
 
         {/* Pricing */}
-        <section className="py-28 px-6 bg-stone-900/40 border-y border-stone-800/60">
+        <section className="py-16 sm:py-28 px-4 sm:px-6 bg-stone-900/40 border-y border-stone-800/60">
           <div className="max-w-3xl mx-auto">
-            <div className="mb-14">
-              <h2 className="text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>No subscriptions. No surprises.</h2>
-              <p className="text-stone-500 mt-3">Build and edit for free. Pay only when you download.</p>
+            <div className="mb-10 sm:mb-14">
+              <h2 className="text-3xl sm:text-4xl text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>Try it for $1.</h2>
+              <p className="text-stone-500 mt-3 text-sm sm:text-base">7-day trial, then $29/mo. Cancel anytime.</p>
             </div>
-            <div className="grid grid-cols-2 gap-6 text-left">
-              <div className="border border-stone-800 rounded-xl p-8 space-y-5">
-                <div>
-                  <div className="flex items-baseline gap-2">
-                    <div className="text-3xl font-bold text-stone-100">$3.24</div>
-                    <div className="text-stone-500 text-sm line-through">$4.99</div>
-                    <div className="text-amber-400 text-xs font-bold bg-amber-500/10 px-2 py-0.5 rounded-full">35% off</div>
-                  </div>
-                  <div className="font-semibold text-stone-300 mt-1">One-Time Download</div>
-                </div>
-                <ul className="space-y-2.5">
-                  {['Single PDF download', 'All AI rewrites included', 'Professional template', 'Yours to keep forever'].map((item) => (
-                    <li key={item} className="flex items-center gap-2.5 text-sm text-stone-400">
-                      <CheckCircle className="w-4 h-4 text-stone-600 flex-shrink-0" /> {item}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/pricing">
-                  <button className="w-full mt-2 border border-stone-700 text-stone-300 hover:bg-stone-800 font-semibold text-sm py-2.5 rounded-lg transition-colors">
-                    Get Started
-                  </button>
-                </Link>
-              </div>
-              <div className="border-2 border-amber-500/60 rounded-xl p-8 space-y-5 relative bg-amber-500/5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 text-left">
+              <div className="border-2 border-amber-500/60 rounded-xl p-6 sm:p-8 space-y-5 relative bg-amber-500/5">
                 <div className="absolute top-5 right-5 bg-amber-500 text-stone-950 text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide">BEST VALUE</div>
                 <div>
-                  <div className="text-3xl font-bold text-stone-100">$2<span className="text-base font-normal text-stone-500">/mo</span></div>
-                  <div className="font-semibold text-stone-300 mt-1">Monthly Subscription</div>
+                  <div className="flex items-baseline gap-2">
+                    <div className="text-3xl font-bold text-stone-100">$1<span className="text-base font-normal text-stone-500">/7 days</span></div>
+                  </div>
+                  <div className="font-semibold text-stone-300 mt-1">Try Pro — then $29/mo</div>
                 </div>
                 <ul className="space-y-2.5">
-                  {['Unlimited downloads', 'All AI enhancements', 'Multiple templates', 'Priority support', 'ATS score checker (soon)'].map((item) => (
+                  {['Unlimited PDF downloads', 'Unlimited AI rewrites', 'AI Generate from prompt', 'All 6 templates', 'Cancel anytime'].map((item) => (
                     <li key={item} className="flex items-center gap-2.5 text-sm text-stone-300">
                       <CheckCircle className="w-4 h-4 text-amber-500 flex-shrink-0" /> {item}
                     </li>
@@ -421,7 +401,25 @@ export default function Home() {
                 </ul>
                 <Link href="/pricing">
                   <button className="w-full mt-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm py-2.5 rounded-lg transition-colors">
-                    Start for $2/mo
+                    Try $1 for 7 days
+                  </button>
+                </Link>
+              </div>
+              <div className="border border-stone-800 rounded-xl p-6 sm:p-8 space-y-5">
+                <div>
+                  <div className="text-3xl font-bold text-stone-100">$149<span className="text-base font-normal text-stone-500"> once</span></div>
+                  <div className="font-semibold text-stone-300 mt-1">Lifetime — pay once</div>
+                </div>
+                <ul className="space-y-2.5">
+                  {['Everything in Pro', 'No recurring charges', 'All future updates', 'Lifetime priority support', 'Yours forever'].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-stone-400">
+                      <CheckCircle className="w-4 h-4 text-stone-600 flex-shrink-0" /> {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/pricing">
+                  <button className="w-full mt-2 border border-stone-700 text-stone-300 hover:bg-stone-800 font-semibold text-sm py-2.5 rounded-lg transition-colors">
+                    Get Lifetime
                   </button>
                 </Link>
               </div>
@@ -431,13 +429,13 @@ export default function Home() {
 
         {/* CTA */}
         <section className="py-28 px-6">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-5xl text-stone-100 mb-5 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
+          <div className="max-w-2xl mx-auto text-center px-4 sm:px-6">
+            <h2 className="text-3xl sm:text-5xl text-stone-100 mb-5 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
               Stop sending the resume<br /><em style={{ fontStyle: 'italic', color: '#FBBF24' }}>that&apos;s costing you interviews</em>
             </h2>
-            <p className="text-stone-500 mb-10 text-base leading-relaxed">It takes 5 minutes. Your next job is waiting.</p>
+            <p className="text-stone-500 mb-8 sm:mb-10 text-sm sm:text-base leading-relaxed">It takes 5 minutes. Your next job is waiting.</p>
             <Link href="/start">
-              <button className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-base px-10 py-4 rounded-lg transition-colors">
+              <button className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-base px-8 sm:px-10 py-3.5 sm:py-4 rounded-lg transition-colors">
                 Build My Resume for Free <ArrowRight className="w-5 h-5" />
               </button>
             </Link>
@@ -445,11 +443,11 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-stone-800/60 px-6 py-8">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <footer className="border-t border-stone-800/60 px-4 sm:px-6 py-8">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
             <Logo size="sm" />
-            <span className="text-stone-700 text-sm">© {new Date().getFullYear()} ResumeGenius</span>
-            <div className="flex gap-6 text-stone-600 text-sm">
+            <span className="text-stone-700 text-xs sm:text-sm order-3 sm:order-2">© {new Date().getFullYear()} ResumeGenius</span>
+            <div className="flex gap-5 sm:gap-6 text-stone-600 text-xs sm:text-sm order-2 sm:order-3">
               <Link href="/privacy" className="hover:text-stone-300 transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-stone-300 transition-colors">Terms</Link>
               <a href="mailto:support@resumegenius.guru" className="hover:text-stone-300 transition-colors">Contact</a>

@@ -61,11 +61,11 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-stone-950 flex flex-col">
       {/* Nav */}
-      <nav className="px-6 py-5 border-b border-stone-800/60 flex items-center justify-between">
+      <nav className="px-4 sm:px-6 py-4 sm:py-5 border-b border-stone-800/60 flex items-center justify-between">
         <Logo size="md" />
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           <Link href="/sign-in" className="text-stone-400 hover:text-stone-100 text-sm transition-colors">Sign in</Link>
-          <Link href="/start" className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm px-4 py-2 rounded-lg transition-colors">
+          <Link href="/start" className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
             Get Started
           </Link>
         </div>
@@ -73,31 +73,31 @@ export default function PricingPage() {
 
       <main className="flex-1">
         {/* Header */}
-        <section className="pt-20 pb-10 px-6 text-center">
+        <section className="pt-12 sm:pt-20 pb-10 px-4 sm:px-6 text-center">
           {/* Trustpilot-style review row */}
-          <div className="inline-flex items-center gap-2.5 text-stone-400 text-xs mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-stone-400 text-[11px] sm:text-xs mb-6">
             <span>Our customers say</span>
             <span className="font-bold text-stone-200">Excellent</span>
             <div className="flex gap-0.5">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="w-4 h-4 bg-green-500 flex items-center justify-center rounded-sm">
-                  <Star className="w-3 h-3 text-white fill-white" />
+                <div key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 bg-green-500 flex items-center justify-center rounded-sm">
+                  <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white fill-white" />
                 </div>
               ))}
             </div>
-            <span className="text-stone-300"><strong className="text-stone-200">4.9</strong> out of 5 based on <strong className="text-stone-200">2,100+ reviews</strong></span>
+            <span className="text-stone-300"><strong className="text-stone-200">4.9</strong>/5 from <strong className="text-stone-200">2,100+ reviews</strong></span>
           </div>
 
-          <h1 className="text-5xl text-stone-100 mb-4 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
+          <h1 className="text-3xl sm:text-5xl text-stone-100 mb-4 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
             All Plans Include A <em style={{ fontStyle: 'italic', color: '#FBBF24' }}>100% Money-Back Guarantee</em>
           </h1>
-          <p className="text-stone-400 text-lg max-w-xl mx-auto">
+          <p className="text-stone-400 text-base sm:text-lg max-w-xl mx-auto">
             Pays for itself with the time you'll save creating one resume.
           </p>
         </section>
 
         {/* Plans — 3 columns */}
-        <section className="px-6 pb-16">
+        <section className="px-4 sm:px-6 pb-16">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5">
 
             {/* Free */}
@@ -180,45 +180,47 @@ export default function PricingPage() {
         </section>
 
         {/* Comparison table */}
-        <section className="px-6 pb-20 pt-10 border-t border-stone-800/60">
+        <section className="px-4 sm:px-6 pb-16 sm:pb-20 pt-10 border-t border-stone-800/60">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl text-stone-100 mb-10 text-center" style={{ fontFamily: 'var(--font-serif)' }}>Everything compared</h2>
-            <div className="bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden">
-              <div className="grid grid-cols-4 text-xs font-bold uppercase tracking-widest text-stone-500 border-b border-stone-800">
-                <div className="px-5 py-4">Feature</div>
-                <div className="px-5 py-4 text-center border-l border-stone-800">Free</div>
-                <div className="px-5 py-4 text-center border-l border-stone-800 text-amber-400">Pro · $29/mo</div>
-                <div className="px-5 py-4 text-center border-l border-stone-800">Lifetime · $149</div>
-              </div>
-              {[
-                ['Build & preview resume', true, true, true],
-                ['AI bullet rewriter', '3 free', 'Unlimited', 'Unlimited'],
-                ['AI Generate from prompt', false, true, true],
-                ['All 6 templates', true, true, true],
-                ['ATS-optimized format', true, true, true],
-                ['PDF downloads', false, 'Unlimited', 'Unlimited'],
-                ['Priority support', false, true, true],
-                ['Pay once, no recurring', false, false, true],
-              ].map(([feature, free, pro, lifetime]) => (
-                <div key={String(feature)} className="grid grid-cols-4 border-b border-stone-800/60 last:border-0">
-                  <div className="px-5 py-4 text-stone-400 text-sm">{feature}</div>
-                  <Cell value={free} />
-                  <Cell value={pro} highlight />
-                  <Cell value={lifetime} />
+            <h2 className="text-2xl sm:text-3xl text-stone-100 mb-8 sm:mb-10 text-center" style={{ fontFamily: 'var(--font-serif)' }}>Everything compared</h2>
+            <div className="bg-stone-900 border border-stone-800 rounded-2xl overflow-x-auto">
+              <div className="min-w-[600px]">
+                <div className="grid grid-cols-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-stone-500 border-b border-stone-800">
+                  <div className="px-3 sm:px-5 py-3 sm:py-4">Feature</div>
+                  <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800">Free</div>
+                  <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800 text-amber-400">Pro · $29/mo</div>
+                  <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800">Lifetime · $149</div>
                 </div>
-              ))}
+                {[
+                  ['Build & preview resume', true, true, true],
+                  ['AI bullet rewriter', '3 free', 'Unlimited', 'Unlimited'],
+                  ['AI Generate from prompt', false, true, true],
+                  ['All 6 templates', true, true, true],
+                  ['ATS-optimized format', true, true, true],
+                  ['PDF downloads', false, 'Unlimited', 'Unlimited'],
+                  ['Priority support', false, true, true],
+                  ['Pay once, no recurring', false, false, true],
+                ].map(([feature, free, pro, lifetime]) => (
+                  <div key={String(feature)} className="grid grid-cols-4 border-b border-stone-800/60 last:border-0">
+                    <div className="px-3 sm:px-5 py-3 sm:py-4 text-stone-400 text-xs sm:text-sm">{feature}</div>
+                    <Cell value={free} />
+                    <Cell value={pro} highlight />
+                    <Cell value={lifetime} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* FAQ */}
-        <section className="px-6 pb-20">
+        <section className="px-4 sm:px-6 pb-16 sm:pb-20">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl text-stone-100 mb-10 text-center" style={{ fontFamily: 'var(--font-serif)' }}>Common questions</h2>
-            <div className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl text-stone-100 mb-8 sm:mb-10 text-center" style={{ fontFamily: 'var(--font-serif)' }}>Common questions</h2>
+            <div className="space-y-5 sm:space-y-6">
               {FAQ.map(({ q, a }) => (
-                <div key={q} className="border-b border-stone-800/60 pb-6">
-                  <div className="text-stone-100 font-semibold mb-2">{q}</div>
+                <div key={q} className="border-b border-stone-800/60 pb-5 sm:pb-6">
+                  <div className="text-stone-100 font-semibold mb-2 text-sm sm:text-base">{q}</div>
                   <div className="text-stone-500 text-sm leading-relaxed">{a}</div>
                 </div>
               ))}
@@ -227,21 +229,21 @@ export default function PricingPage() {
         </section>
 
         {/* CTA */}
-        <section className="px-6 pb-24 text-center">
-          <h2 className="text-4xl text-stone-100 mb-4" style={{ fontFamily: 'var(--font-serif)' }}>
+        <section className="px-4 sm:px-6 pb-20 sm:pb-24 text-center">
+          <h2 className="text-3xl sm:text-4xl text-stone-100 mb-4" style={{ fontFamily: 'var(--font-serif)' }}>
             Start for free.<br />Pay when you&apos;re ready.
           </h2>
-          <p className="text-stone-500 mb-8 text-sm">No credit card required to build.</p>
-          <Link href="/start" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-8 py-4 rounded-xl transition-colors">
+          <p className="text-stone-500 mb-6 sm:mb-8 text-sm">No credit card required to build.</p>
+          <Link href="/start" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl transition-colors text-sm sm:text-base">
             Build My Resume for Free <ArrowRight className="w-4 h-4" />
           </Link>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-stone-800/60 px-6 py-8 flex items-center justify-between text-stone-600 text-xs">
+      <footer className="border-t border-stone-800/60 px-4 sm:px-6 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 text-stone-600 text-xs">
         <Logo size="sm" />
-        <div className="flex gap-6">
+        <div className="flex gap-5 sm:gap-6">
           <Link href="/privacy" className="hover:text-stone-400 transition-colors">Privacy</Link>
           <Link href="/terms" className="hover:text-stone-400 transition-colors">Terms</Link>
           <a href="mailto:support@resumegenius.guru" className="hover:text-stone-400 transition-colors">Contact</a>
@@ -254,14 +256,14 @@ export default function PricingPage() {
 function Cell({ value, highlight }: { value: boolean | string; highlight?: boolean }) {
   if (value === true) {
     return (
-      <div className="px-5 py-4 text-center border-l border-stone-800">
+      <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800">
         <CheckCircle className={`w-4 h-4 mx-auto ${highlight ? 'text-amber-500' : 'text-stone-400'}`} />
       </div>
     )
   }
   if (value === false) {
     return (
-      <div className="px-5 py-4 text-center border-l border-stone-800">
+      <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800">
         <span className="text-stone-700 text-base">—</span>
       </div>
     )
