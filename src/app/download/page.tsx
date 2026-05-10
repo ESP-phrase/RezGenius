@@ -32,7 +32,7 @@ function DownloadInner() {
       .then(r => r.json())
       .then(data => {
         setVerified(!!data.valid)
-        if (data.valid) rdtTrack('Purchase', { currency: 'USD' })
+        if (data.valid) rdtTrack('Purchase', { currency: 'USD', conversionId: sessionId })
       })
       .catch(() => setVerified(false))
   }, [sessionId])
