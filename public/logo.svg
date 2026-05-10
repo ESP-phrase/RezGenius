@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200">
+  <!-- Background -->
+  <rect width="800" height="200" fill="#0C0A09"/>
+  <!-- Logo mark: spark/diamond -->
+  <g transform="translate(40, 40)">
+    <circle cx="60" cy="60" r="58" fill="#F59E0B" fill-opacity="0.12"/>
+    <path d="M60 12 L73 52 L113 60 L73 68 L60 108 L47 68 L7 60 L47 52 Z" fill="#F59E0B"/>
+    <path d="M60 28 L68.25 53.5 L93 60 L68.25 66.5 L60 92 L51.75 66.5 L27 60 L51.75 53.5 Z" fill="#FDE68A" fill-opacity="0.5"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="180" y="125" font-family="Plus Jakarta Sans, system-ui, -apple-system, sans-serif" font-size="64" font-weight="800" fill="#F5F5F4" letter-spacing="-1.5">ResumeGenius</text>
+</svg>
