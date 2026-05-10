@@ -1,7 +1,11 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+let _stripe: Stripe | null = null
+function stripe() {
+  if (!_stripe) _stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '')
+  return _stripe
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,7 +15,7 @@ export async function POST(req: NextRequest) {
     const cancelUrl = resumeId ? `${appUrl}/builder?id=${resumeId}` : `${appUrl}/builder`
 
     if (mode === 'subscription') {
-      const session = await stripe.checkout.sessions.create({
+      const session = await stripe().checkout.sessions.create({
         mode: 'subscription',
         line_items: [{ price: process.env.STRIPE_PRICE_ID_SUBSCRIPTION, quantity: 1 }],
         metadata: { resumeId: resumeId ?? '' },
@@ -22,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     // pay-per-resume
-    const session = await stripe.checkout.sessions.create({
+    const session = await stripe().checkout.sessions.create({
       mode: 'payment',
       line_items: [
         {
