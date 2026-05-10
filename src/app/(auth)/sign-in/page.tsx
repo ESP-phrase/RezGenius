@@ -33,7 +33,9 @@ function SignInInner() {
     })
     setLoading(false)
     if (!res.ok) {
-      setError('Could not send email. Please try again.')
+      const data = await res.json().catch(() => ({}))
+      const detail = data?.error ? ` (${data.error})` : ''
+      setError(`Could not send email${detail}`)
     } else {
       setMode('magic-sent')
     }

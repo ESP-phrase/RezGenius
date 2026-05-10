@@ -9,26 +9,38 @@ function resend() {
 }
 
 export async function POST(req: Request) {
+  let stage = 'init'
   try {
+    console.log('[magic-link] start', {
+      hasResendKey: !!process.env.RESEND_API_KEY,
+      resendKeyPrefix: process.env.RESEND_API_KEY?.slice(0, 5) ?? 'none',
+      emailFrom: process.env.EMAIL_FROM ?? 'missing',
+    })
+
+    stage = 'parse-body'
     const { email } = await req.json()
     if (!email) return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    console.log('[magic-link] email received', email)
 
+    stage = 'db-upsert-user'
     await db.user.upsert({
       where: { email },
       update: {},
       create: { email },
     })
 
+    stage = 'db-create-token'
     const token = crypto.randomUUID()
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
-
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000)
     await db.magicToken.create({ data: { email, token, expiresAt } })
 
     const baseUrl = new URL(req.url).origin
     const link = `${baseUrl}/api/auth/magic-link/verify?token=${token}`
-
     const fromAddress = process.env.EMAIL_FROM ?? 'onboarding@resend.dev'
-    await resend().emails.send({
+
+    stage = 'resend-send'
+    console.log('[magic-link] sending via resend', { from: fromAddress, to: email })
+    const result = await resend().emails.send({
       from: `ResumeGenius <${fromAddress}>`,
       to: email,
       subject: 'Your sign-in link for ResumeGenius',
@@ -52,9 +64,15 @@ export async function POST(req: Request) {
       `,
     })
 
-    return NextResponse.json({ ok: true })
-  } catch (err) {
-    console.error('[magic-link]', err)
-    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
+    console.log('[magic-link] resend result', JSON.stringify(result))
+    if (result.error) {
+      return NextResponse.json({ error: result.error.message ?? 'Resend error', detail: result.error }, { status: 500 })
+    }
+
+    return NextResponse.json({ ok: true, id: result.data?.id })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('[magic-link] FAILED at stage:', stage, '— error:', message, err)
+    return NextResponse.json({ error: message, stage }, { status: 500 })
   }
 }
