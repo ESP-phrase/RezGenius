@@ -3,7 +3,11 @@ import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+let _openai: OpenAI | null = null
+function getOpenAI() {
+  if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  return _openai
+}
 
 const SYSTEM = `You are a professional resume writer. Given a user's background description, generate a complete, polished resume as JSON.
 
@@ -65,7 +69,7 @@ export async function POST(req: Request) {
   const user = await db.user.findUnique({ where: { email: session.user.email } })
   if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
 
-  const completion = await openai.chat.completions.create({
+  const completion = await getOpenAI().chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
       { role: 'system', content: SYSTEM },

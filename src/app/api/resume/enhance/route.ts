@@ -1,7 +1,11 @@
 import OpenAI from 'openai'
 import { NextRequest, NextResponse } from 'next/server'
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+let _client: OpenAI | null = null
+function getClient() {
+  if (!_client) _client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  return _client
+}
 
 const STRONG_BULLET_EXAMPLES = [
   'Increased quarterly revenue by 23% by redesigning checkout flow, reducing cart abandonment from 68% to 45%',
@@ -21,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     const examples = STRONG_BULLET_EXAMPLES.map((e, i) => `${i + 1}. ${e}`).join('\n')
 
-    const completion = await client.chat.completions.create({
+    const completion = await getClient().chat.completions.create({
       model: 'gpt-4o',
       max_tokens: 256,
       messages: [

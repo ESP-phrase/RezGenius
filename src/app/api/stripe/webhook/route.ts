@@ -1,7 +1,11 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+let _stripe: Stripe | null = null
+function stripe() {
+  if (!_stripe) _stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '')
+  return _stripe
+}
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -10,7 +14,7 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!)
+    event = stripe().webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET ?? '')
   } catch (err) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }

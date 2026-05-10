@@ -2,7 +2,11 @@
 import { Resend } from 'resend'
 import { db } from '@/lib/db'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function resend() {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY ?? 're_dummy')
+  return _resend
+}
 
 export async function POST(req: Request) {
   try {
@@ -24,7 +28,7 @@ export async function POST(req: Request) {
     const link = `${baseUrl}/api/auth/magic-link/verify?token=${token}`
 
     const fromAddress = process.env.EMAIL_FROM ?? 'onboarding@resend.dev'
-    await resend.emails.send({
+    await resend().emails.send({
       from: `ResumeGenius <${fromAddress}>`,
       to: email,
       subject: 'Your sign-in link for ResumeGenius',
