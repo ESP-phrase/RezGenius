@@ -44,7 +44,12 @@ export async function rdtCapiTrack(input: CapiEventInput): Promise<void> {
   const testId = process.env.REDDIT_CAPI_TEST_ID
 
   if (!token || !adAccountId || !pixelId) {
-    console.warn('[rdt-capi] missing env vars, skipping CAPI event', input.eventName)
+    console.warn('[rdt-capi] missing env vars, skipping', input.eventName, {
+      hasAccessToken: !!token,
+      hasAdAccountId: !!adAccountId,
+      hasPixelId: !!pixelId,
+      hasTestId: !!testId,
+    })
     return
   }
 
