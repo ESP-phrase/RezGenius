@@ -258,14 +258,13 @@ function Bold({ resume: r, accent }: { resume: Resume; accent: string }) {
         </div>
       </div>
       <div style={{ padding: '20px 32px' }}>
-        {[
+        {([
           p.summary && { title: 'Summary', body: <p className="text-slate-600 leading-relaxed">{p.summary}</p> },
           r.experience.length > 0 && { title: 'Experience', body: r.experience.map(e => <ExpEntry key={e.id} exp={e} accent={accent} />) },
           r.education.length > 0 && { title: 'Education', body: r.education.map(e => <EduEntry key={e.id} edu={e} />) },
           r.skills.length > 0 && { title: 'Skills', body: <div className="flex flex-wrap gap-2">{r.skills.map(s => <span key={s.id} className="text-[11px] px-2 py-1 rounded" style={{ backgroundColor: `${accent}18`, color: accent }}>{s.name}</span>)}</div> },
-        ].filter((s): s is { title: string; body: React.ReactNode } => Boolean(s)).map((sec) => (
+        ].filter(Boolean) as { title: string; body: React.ReactNode }[]).map((sec) => (
           <div key={sec.title} className="mb-5">
-
             <div className="flex items-center gap-2 mb-2">
               <div className="w-1 h-4 rounded-sm" style={{ backgroundColor: accent }} />
               <div className="font-black uppercase tracking-wide text-[12px]" style={{ color: accent }}>{sec.title}</div>
