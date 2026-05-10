@@ -134,6 +134,16 @@ export default function DashboardShell({ user, initialResumes }: Props) {
   const [generating, setGenerating] = useState(false)
   const [genError, setGenError] = useState('')
 
+  // Auto-open AI Generate modal when user picked "Describe yourself" on /start
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const startType = sessionStorage.getItem('resumeStartType')
+    if (startType === 'prompt') {
+      setShowPrompt(true)
+      sessionStorage.removeItem('resumeStartType')
+    }
+  }, [])
+
   async function handleGenerate() {
     if (!prompt.trim()) return
     setGenerating(true)
