@@ -9,23 +9,33 @@ function stripe() {
 
 export async function POST(req: NextRequest) {
   try {
-    const { mode, resumeId } = await req.json()
+    const { mode, resumeId, trial } = await req.json()
     const appUrl = new URL(req.url).origin
 
     const cancelUrl = resumeId ? `${appUrl}/builder?id=${resumeId}` : `${appUrl}/builder`
+    const successUrl = `${appUrl}/download?session_id={CHECKOUT_SESSION_ID}&resume_id=${resumeId}`
 
     if (mode === 'subscription') {
-      const session = await stripe().checkout.sessions.create({
+      const params: Stripe.Checkout.SessionCreateParams = {
         mode: 'subscription',
         line_items: [{ price: process.env.STRIPE_PRICE_ID_SUBSCRIPTION, quantity: 1 }],
-        metadata: { resumeId: resumeId ?? '' },
-        success_url: `${appUrl}/download?session_id={CHECKOUT_SESSION_ID}&resume_id=${resumeId}`,
+        metadata: { resumeId: resumeId ?? '', trial: trial ? '1' : '0' },
+        success_url: successUrl,
         cancel_url: cancelUrl,
-      })
+      }
+
+      // $1 trial: apply $28 discount on first month so user pays $1, then full $29/mo.
+      // Coupon must be created in Stripe dashboard with id "FIRST_MONTH_DOLLAR"
+      // (amount_off: 2800, currency: usd, duration: once)
+      if (trial) {
+        params.discounts = [{ coupon: process.env.STRIPE_TRIAL_COUPON_ID || 'FIRST_MONTH_DOLLAR' }]
+      }
+
+      const session = await stripe().checkout.sessions.create(params)
       return NextResponse.json({ url: session.url })
     }
 
-    // pay-per-resume
+    // Lifetime / pay-per-resume
     const session = await stripe().checkout.sessions.create({
       mode: 'payment',
       line_items: [
@@ -33,19 +43,20 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'usd',
             unit_amount: Number(process.env.PRICE_PER_RESUME || 14900),
-            product_data: { name: 'AI Resume Download', description: 'One-time PDF download' },
+            product_data: { name: 'ResumeGenius Lifetime', description: 'Lifetime access · pay once' },
           },
           quantity: 1,
         },
       ],
       metadata: { resumeId: resumeId ?? '' },
-      success_url: `${appUrl}/download?session_id={CHECKOUT_SESSION_ID}&resume_id=${resumeId}`,
+      success_url: successUrl,
       cancel_url: cancelUrl,
     })
 
     return NextResponse.json({ url: session.url })
   } catch (err) {
     console.error('Stripe checkout error:', err)
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
+    const message = err instanceof Error ? err.message : 'Failed to create checkout session'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
