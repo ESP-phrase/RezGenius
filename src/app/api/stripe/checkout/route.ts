@@ -1,5 +1,6 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
+import { rdtCapiTrack } from '@/lib/rdt-capi'
 
 let _stripe: Stripe | null = null
 function stripe() {
@@ -11,6 +12,8 @@ export async function POST(req: NextRequest) {
   try {
     const { mode, resumeId, trial } = await req.json()
     const appUrl = new URL(req.url).origin
+    const ipAddress = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? undefined
+    const userAgent = req.headers.get('user-agent') ?? undefined
 
     const cancelUrl = resumeId ? `${appUrl}/builder?id=${resumeId}` : `${appUrl}/builder`
     const successUrl = `${appUrl}/download?session_id={CHECKOUT_SESSION_ID}&resume_id=${resumeId}`
@@ -32,6 +35,17 @@ export async function POST(req: NextRequest) {
       }
 
       const session = await stripe().checkout.sessions.create(params)
+
+      // Server-side AddToCart event for Reddit CAPI (dedupes with client pixel via session.id)
+      await rdtCapiTrack({
+        eventName: 'AddToCart',
+        conversionId: session.id,
+        value: trial ? 1 : 29,
+        currency: 'USD',
+        ipAddress,
+        userAgent,
+      })
+
       return NextResponse.json({ url: session.url })
     }
 
@@ -51,6 +65,15 @@ export async function POST(req: NextRequest) {
       metadata: { resumeId: resumeId ?? '' },
       success_url: successUrl,
       cancel_url: cancelUrl,
+    })
+
+    await rdtCapiTrack({
+      eventName: 'AddToCart',
+      conversionId: session.id,
+      value: 149,
+      currency: 'USD',
+      ipAddress,
+      userAgent,
     })
 
     return NextResponse.json({ url: session.url })
