@@ -8,6 +8,7 @@ import { Loader2, Download, XCircle } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import type { Resume } from '@/types/resume'
 import { rdtTrack } from '@/lib/rdt'
+import { ttqTrack } from '@/lib/ttq'
 
 const PDFDownloadLink = dynamic(
   () => import('@react-pdf/renderer').then((m) => m.PDFDownloadLink),
@@ -32,7 +33,10 @@ function DownloadInner() {
       .then(r => r.json())
       .then(data => {
         setVerified(!!data.valid)
-        if (data.valid) rdtTrack('Purchase', { currency: 'USD', conversionId: sessionId })
+        if (data.valid) {
+          rdtTrack('Purchase', { currency: 'USD', conversionId: sessionId })
+          ttqTrack('CompletePayment', { currency: 'USD', content_type: 'product', event_id: sessionId ?? undefined })
+        }
       })
       .catch(() => setVerified(false))
   }, [sessionId])

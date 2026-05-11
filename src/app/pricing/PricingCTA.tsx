@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import { ArrowRight, Loader2, Sparkles } from 'lucide-react'
 import { rdtTrack } from '@/lib/rdt'
+import { ttqTrack } from '@/lib/ttq'
 import Link from 'next/link'
 
 async function goToCheckout(opts: { mode: 'payment' | 'subscription'; value: number; trial?: boolean }) {
   rdtTrack('AddToCart', { currency: 'USD', value: opts.value, itemCount: 1 })
+  ttqTrack('AddToCart', { currency: 'USD', value: opts.value, quantity: 1, content_type: 'product' })
   const res = await fetch('/api/stripe/checkout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

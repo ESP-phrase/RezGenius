@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { CheckCircle, Lock, Zap, ArrowLeft, Loader2, ShieldCheck, RefreshCw } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import { rdtTrack } from '@/lib/rdt'
+import { ttqTrack } from '@/lib/ttq'
 
 const PLANS = [
   {
@@ -40,11 +41,9 @@ function CheckoutInner() {
   async function handlePay() {
     setLoading(true)
     setError('')
-    rdtTrack('AddToCart', {
-      currency: 'USD',
-      value: selected === 'subscription' ? 29 : 149,
-      itemCount: 1,
-    })
+    const value = selected === 'subscription' ? 29 : 149
+    rdtTrack('AddToCart', { currency: 'USD', value, itemCount: 1 })
+    ttqTrack('AddToCart', { currency: 'USD', value, quantity: 1, content_type: 'product' })
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
