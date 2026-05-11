@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#FAFAF9"/>
+    </linearGradient>
+    <linearGradient id="sparkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="innerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF3C7"/>
+      <stop offset="100%" stop-color="#FBBF24"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+
+  <!-- Spark mark -->
+  <g transform="translate(540, 400)">
+    <circle cx="0" cy="0" r="240" fill="#F59E0B" opacity="0.06"/>
+    <circle cx="0" cy="0" r="180" fill="#F59E0B" opacity="0.08"/>
+    <path
+      d="M0 -160 L24 -32 Q28 -12 48 -8 L160 0 L48 8 Q28 12 24 32 L0 160 L-24 32 Q-28 12 -48 8 L-160 0 L-48 -8 Q-28 -12 -24 -32 Z"
+      fill="url(#sparkGrad)"
+    />
+    <path
+      d="M0 -100 L14 -22 Q16 -8 28 -6 L96 0 L28 6 Q16 8 14 22 L0 100 L-14 22 Q-16 8 -28 6 L-96 0 L-28 -6 Q-16 -8 -14 -22 Z"
+      fill="url(#innerGrad)"
+      opacity="0.7"
+    />
+  </g>
+
+  <!-- Wordmark -->
+  <text x="540" y="780" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="120" font-weight="800" fill="#1C1917" letter-spacing="-3">ResumeGenius</text>
+  <text x="540" y="860" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="36" font-weight="500" fill="#78716C" letter-spacing="2">AI · RESUMES · INTERVIEWS</text>
+</svg>
