@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { CheckCircle, Star, ArrowRight } from 'lucide-react'
+import { CheckCircle, Star, ArrowRight, Play, Sparkles, Shield, FileText, Lock, Clock, DollarSign, ChevronDown } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import HomeDemoSection from './HomeDemoSection'
 import ExitIntent from './ExitIntent'
@@ -17,48 +17,115 @@ const jsonLd = {
   aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '2100' },
 }
 
-function ResumeMockup() {
+type IconComponent = React.ComponentType<{ className?: string; strokeWidth?: number; fill?: string }>
+
+function Stat({ icon: Icon, value, label, caps }: { icon: IconComponent; value: string; label: string; caps?: boolean }) {
   return (
-    <div className="bg-[#FAF9F6] rounded-xl shadow-2xl p-6 w-full max-w-sm text-[10px] font-sans border border-stone-200">
-      <div className="flex items-start gap-3 mb-4 pb-4 border-b border-stone-200">
-        <div className="w-9 h-9 rounded-full bg-stone-200 flex items-center justify-center flex-shrink-0">
-          <span className="text-stone-500 font-bold text-sm">AJ</span>
-        </div>
-        <div>
-          <div className="font-bold text-stone-800 text-sm">Alex Johnson</div>
-          <div className="text-stone-400">alex@email.com · San Francisco, CA</div>
-          <div className="text-stone-400">linkedin.com/in/alexjohnson</div>
-        </div>
+    <div className="flex items-start gap-2.5">
+      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
+        <Icon className="w-4 h-4 text-amber-400" />
       </div>
-      <div className="mb-3">
-        <div className="text-[9px] font-bold uppercase tracking-widest text-stone-400 mb-1">Experience</div>
-        <div className="font-semibold text-stone-700">Senior Product Manager</div>
-        <div className="text-stone-400 mb-1">Stripe · 2021 – Present</div>
-        <div className="space-y-1">
-          {['Grew checkout conversion by 31%, adding $4.2M ARR', 'Led 6-engineer team shipping payments in 12 markets', 'Reduced support tickets 44% via self-serve onboarding'].map((b) => (
-            <div key={b} className="flex gap-1 text-stone-600">
-              <span className="text-amber-500 mt-0.5 flex-shrink-0">•</span>
-              <span>{b}</span>
-            </div>
-          ))}
-        </div>
+      <div className="min-w-0">
+        <div className="text-stone-100 text-base sm:text-lg font-extrabold leading-tight">{value}</div>
+        <div className={`text-stone-500 text-[10px] sm:text-[11px] leading-tight mt-0.5 ${caps ? 'uppercase tracking-wider font-semibold' : ''}`}>{label}</div>
       </div>
-      <div className="mb-3">
-        <div className="text-[9px] font-bold uppercase tracking-widest text-stone-400 mb-1">Education</div>
-        <div className="font-semibold text-stone-700">B.S. Computer Science</div>
-        <div className="text-stone-400">UC Berkeley · 2019</div>
+    </div>
+  )
+}
+
+function FeatureBlock({ icon: Icon, title, desc }: { icon: IconComponent; title: string; desc: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
+        <Icon className="w-5 h-5 text-amber-400" />
       </div>
       <div>
-        <div className="text-[9px] font-bold uppercase tracking-widest text-stone-400 mb-1">Skills</div>
-        <div className="flex flex-wrap gap-1">
-          {['Product Strategy', 'SQL', 'Python', 'A/B Testing', 'Figma'].map((s) => (
-            <span key={s} className="bg-amber-50 text-amber-700 px-2 py-0.5 rounded text-[9px]">{s}</span>
-          ))}
-        </div>
+        <h3 className="text-stone-100 font-bold text-base mb-1.5">{title}</h3>
+        <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">{desc}</p>
       </div>
-      <div className="mt-4 bg-amber-500 text-stone-950 rounded-lg px-3 py-2 flex items-center gap-2">
-        <svg viewBox="0 0 12 12" fill="none" className="w-3 h-3 flex-shrink-0"><path d="M6 1l1.2 3.6H11L8.1 6.8l1.2 3.6L6 8.2 2.7 10.4l1.2-3.6L1 4.6h3.8L6 1z" fill="currentColor"/></svg>
-        <span className="text-[9px] font-semibold">12 bullets rewritten</span>
+    </div>
+  )
+}
+
+function AtsScore({ value = 96 }: { value?: number }) {
+  // 56px circle with circular progress ring
+  const r = 24
+  const c = 2 * Math.PI * r
+  const dash = (value / 100) * c
+  return (
+    <div className="relative w-14 h-14 flex-shrink-0">
+      <svg viewBox="0 0 56 56" className="w-full h-full -rotate-90">
+        <circle cx="28" cy="28" r={r} fill="none" stroke="#E5E7EB" strokeWidth="4" />
+        <circle cx="28" cy="28" r={r} fill="none" stroke="#10B981" strokeWidth="4" strokeLinecap="round" strokeDasharray={`${dash} ${c}`} />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-[14px] font-extrabold text-emerald-600 leading-none">{value}</span>
+      </div>
+      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[7px] font-bold uppercase tracking-widest text-emerald-700 whitespace-nowrap">ATS Score</div>
+    </div>
+  )
+}
+
+function ResumeMockup() {
+  return (
+    <div className="relative w-full max-w-md">
+      {/* Soft amber glow halo behind the device */}
+      <div className="absolute inset-0 -m-10 bg-amber-500/10 blur-3xl rounded-full pointer-events-none" />
+      {/* Outer dark frame */}
+      <div className="relative bg-stone-900 border border-stone-800 rounded-3xl p-3 shadow-[0_20px_80px_-15px_rgba(245,158,11,0.25)]">
+        {/* Inner resume */}
+        <div className="bg-[#FAF9F6] rounded-2xl p-6 text-[10px] font-sans">
+          {/* Header with avatar + contact + ATS */}
+          <div className="flex items-start gap-3 mb-4 pb-4 border-b border-stone-200">
+            <div className="w-10 h-10 rounded-full bg-stone-200 flex items-center justify-center flex-shrink-0">
+              <span className="text-stone-500 font-bold text-sm">AJ</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-bold text-stone-800 text-sm">Alex Johnson</div>
+              <div className="text-stone-400 text-[10px] mt-0.5">San Francisco, CA · alex@email.com</div>
+              <div className="text-amber-600 text-[10px] font-medium">linkedin.com/in/alexjohnson</div>
+            </div>
+            <AtsScore value={96} />
+          </div>
+          {/* Experience */}
+          <div className="mb-4">
+            <div className="text-[9px] font-bold uppercase tracking-widest text-stone-400 mb-2">Experience</div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-stone-800">Senior Product Manager</span>
+              <span className="text-stone-400">•</span>
+              <span className="text-stone-600">Stripe</span>
+            </div>
+            <div className="text-stone-400 text-[10px] mb-1.5">2021 – Present</div>
+            <div className="space-y-1.5">
+              {['Grew checkout conversion by 31%, adding $4.2M ARR', 'Led 6 engineer teams shipping payments in 12 markets', 'Reduced support tickets 64% via self-serve onboarding'].map((b) => (
+                <div key={b} className="flex gap-1.5 text-stone-700 leading-snug">
+                  <span className="text-amber-500 mt-0.5 flex-shrink-0">•</span>
+                  <span>{b}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Education */}
+          <div className="mb-4">
+            <div className="text-[9px] font-bold uppercase tracking-widest text-stone-400 mb-1">Education</div>
+            <div className="font-semibold text-stone-800">B.S. Computer Science</div>
+            <div className="text-stone-500 text-[10px]">UC Berkeley · 2016</div>
+          </div>
+          {/* Skills */}
+          <div className="mb-4">
+            <div className="text-[9px] font-bold uppercase tracking-widest text-stone-400 mb-2">Skills</div>
+            <div className="flex flex-wrap gap-1.5">
+              {['Product Strategy', 'SQL', 'Python', 'A/B Testing', 'Figma'].map((s) => (
+                <span key={s} className="bg-amber-50 border border-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[9px] font-medium">{s}</span>
+              ))}
+            </div>
+          </div>
+          {/* Bullets rewritten ribbon */}
+          <div className="bg-amber-500 text-stone-950 rounded-lg px-3 py-2 flex items-center gap-2">
+            <Star className="w-3 h-3 fill-stone-950 flex-shrink-0" />
+            <span className="text-[10px] font-bold">12 bullets rewritten</span>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -81,55 +148,87 @@ export default function Home() {
         {/* Nav */}
         <nav className="border-b border-stone-800/60 px-4 sm:px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
           <Logo size="lg" />
-          <div className="flex items-center gap-3 sm:gap-6">
-            <Link href="/pricing" className="hidden sm:inline text-stone-500 hover:text-stone-200 text-sm transition-colors">Pricing</Link>
-            <Link href="/sign-in" className="text-stone-500 hover:text-stone-200 text-sm transition-colors">Sign In</Link>
+          {/* Center nav (desktop only) */}
+          <div className="hidden lg:flex items-center gap-8">
+            <a href="#features" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Features</a>
+            <a href="#examples" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Examples</a>
+            <Link href="/pricing" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Pricing</Link>
+            <button className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors inline-flex items-center gap-1">
+              Resources <ChevronDown className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div className="flex items-center gap-3 sm:gap-5">
+            <Link href="/sign-in" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Sign in</Link>
             <Link href="/start">
-              <button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
-                Build My Resume
+              <button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-lg transition-colors inline-flex items-center gap-1.5 whitespace-nowrap">
+                Build My Resume <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </Link>
           </div>
         </nav>
 
         {/* Hero */}
-        <section className="px-4 sm:px-6 pt-12 sm:pt-20 pb-16 sm:pb-24">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+        <section className="px-4 sm:px-6 pt-10 sm:pt-16 pb-12 sm:pb-20">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-12 lg:gap-16 items-center">
             <div className="text-center md:text-left order-2 md:order-1">
-              <div className="inline-flex items-center gap-2 border border-stone-700 text-stone-400 text-[11px] sm:text-xs font-medium px-3 py-1.5 rounded-full mb-6 sm:mb-8">
-                <span className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
+              {/* Pill */}
+              <div className="inline-flex items-center gap-2 border border-stone-700/80 bg-stone-900/40 text-stone-300 text-[11px] sm:text-xs font-medium px-3.5 py-1.5 rounded-full mb-6 sm:mb-8">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 Used by professionals at Google, Stripe &amp; more
               </div>
-              <h1 className="text-[36px] sm:text-[44px] md:text-[52px] leading-[1.08] font-normal text-stone-100 mb-5 sm:mb-6" style={{ fontFamily: 'var(--font-serif)' }}>
-                The resume that<br />
-                <em style={{ fontStyle: 'italic', color: '#FBBF24' }}>finally does you justice</em>
+
+              {/* Heading — sans-serif bold like reference */}
+              <h1 className="font-extrabold text-stone-100 text-[44px] sm:text-[60px] md:text-[68px] leading-[1.02] tracking-tight mb-6">
+                The resume that
+                <br />
+                <span className="relative inline-block">
+                  <span style={{ background: 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                    finally does you justice.
+                  </span>
+                  {/* Sparkle decoration */}
+                  <Sparkles className="hidden md:block absolute -top-2 -right-8 w-7 h-7 text-amber-400" strokeWidth={2.5} />
+                </span>
               </h1>
-              <p className="text-stone-400 text-base sm:text-lg mb-8 sm:mb-10 leading-relaxed md:max-w-md mx-auto md:mx-0">
-                You&apos;re more impressive than your current resume shows. ResumeGenius rewrites your experience into language that gets responses — polished PDF in minutes.
+
+              {/* Subhead */}
+              <p className="text-stone-400 text-base sm:text-lg mb-7 leading-relaxed md:max-w-xl mx-auto md:mx-0">
+                You&apos;re more impressive than your current resume shows. ResumeGenius rewrites your experience into powerful, impactful language that gets responses — polished PDF in minutes.
               </p>
-              <div className="flex flex-col sm:flex-row items-center md:items-center md:justify-start gap-4 sm:gap-5 mb-10 sm:mb-12">
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row items-center md:items-center md:justify-start gap-3 sm:gap-3 mb-7">
                 <Link href="/start" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-base px-7 py-3.5 rounded-lg transition-colors">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-base px-6 py-3.5 rounded-xl transition-colors shadow-[0_0_40px_-10px_rgba(245,158,11,0.6)]">
                     Build My Resume <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
-                <span className="text-stone-600 text-sm">Free to build · Pay to download</span>
+                <a href="#how-it-works" className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-stone-700 hover:border-stone-500 bg-stone-900/50 hover:bg-stone-800/60 text-stone-100 font-semibold text-base px-6 py-3.5 rounded-xl transition-colors">
+                    <Play className="w-4 h-4 fill-current" /> See How It Works
+                  </button>
+                </a>
               </div>
-              <div className="flex items-center justify-center md:justify-start gap-4 sm:gap-8">
-                <div>
-                  <div className="text-xl sm:text-2xl font-bold text-stone-100">5 min</div>
-                  <div className="text-stone-500 text-[10px] sm:text-xs mt-0.5">average to finish</div>
-                </div>
-                <div className="w-px h-8 bg-stone-800" />
-                <div>
-                  <div className="text-xl sm:text-2xl font-bold text-stone-100">4.9★</div>
-                  <div className="text-stone-500 text-[10px] sm:text-xs mt-0.5">2,100+ users</div>
-                </div>
-                <div className="w-px h-8 bg-stone-800" />
-                <div>
-                  <div className="text-xl sm:text-2xl font-bold text-stone-100">$1</div>
-                  <div className="text-stone-500 text-[10px] sm:text-xs mt-0.5">7-day trial</div>
-                </div>
+
+              {/* Trust indicators row */}
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-6 gap-y-2 mb-10 text-sm">
+                {[
+                  { label: 'Free to build' },
+                  { label: 'Pay to download' },
+                  { label: 'Takes 5 minutes' },
+                ].map(item => (
+                  <div key={item.label} className="flex items-center gap-1.5">
+                    <CheckCircle className="w-4 h-4 text-amber-500" />
+                    <span className="text-stone-400">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 max-w-2xl">
+                <Stat icon={Clock} value="5 min" label="average to finish" />
+                <Stat icon={Star} value="4.9★" label="3,100+ reviews" />
+                <Stat icon={DollarSign} value="$1" label="7-day trial" />
+                <Stat icon={Shield} value="100%" label="SATISFACTION GUARANTEE" caps />
               </div>
             </div>
             <div className="flex justify-center order-1 md:order-2">
@@ -138,31 +237,36 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Logos marquee */}
-        <section className="relative border-y border-stone-800/60 py-10 overflow-hidden bg-stone-900/40">
-          <div className="flex items-center justify-center gap-3 mb-7">
-            <div className="h-px w-10 bg-stone-700" />
-            <span className="text-stone-600 text-[10px] font-semibold uppercase tracking-[0.25em]">Trusted by professionals at</span>
-            <div className="h-px w-10 bg-stone-700" />
+        {/* Trusted by — logos */}
+        <section className="px-4 sm:px-6 pb-10 sm:pb-14">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-center gap-3 mb-8">
+              <div className="h-px w-10 bg-stone-800" />
+              <span className="text-stone-600 text-[10px] font-semibold uppercase tracking-[0.25em]">Trusted by professionals at</span>
+              <div className="h-px w-10 bg-stone-800" />
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-x-10 sm:gap-x-14 gap-y-5 opacity-80">
+              {['Google', 'stripe', 'airbnb', 'Microsoft', 'Meta', 'NETFLIX', 'shopify', 'figma', 'Uber', 'Notion'].map((co) => (
+                <span key={co} className="text-stone-400 font-semibold text-base sm:text-lg tracking-tight">{co}</span>
+              ))}
+            </div>
           </div>
-          <div className="relative flex overflow-hidden">
-            <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-stone-950 to-transparent pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-stone-950 to-transparent pointer-events-none" />
-            {[0, 1].map(track => (
-              <div key={track} className="flex animate-marquee items-center shrink-0" aria-hidden={track === 1}>
-                {logos.map((co, i) => (
-                  <span key={i} className="inline-flex items-center flex-shrink-0 px-8">
-                    <span className="text-stone-500 font-medium text-sm tracking-wide">{co}</span>
-                    <span className="text-stone-700 text-sm select-none ml-8">·</span>
-                  </span>
-                ))}
-              </div>
-            ))}
+        </section>
+
+        {/* Feature strip — 4 columns in a dark container */}
+        <section id="features" className="px-4 sm:px-6 pb-10 sm:pb-16">
+          <div className="max-w-7xl mx-auto bg-stone-900/40 border border-stone-800/60 rounded-2xl p-6 sm:p-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+              <FeatureBlock icon={Sparkles} title="AI-Powered Rewrite" desc="Transforms your experience into compelling, achievement-focused bullet points." />
+              <FeatureBlock icon={Shield} title="ATS-Optimized" desc="Designed to pass ATS scanners and get you past the first round." />
+              <FeatureBlock icon={FileText} title="Polished, Professional" desc="Beautiful, recruiter-approved formats that make you stand out." />
+              <FeatureBlock icon={Lock} title="Privacy First" desc="Your data is secure and never shared. We respect your privacy." />
+            </div>
           </div>
         </section>
 
         {/* How it works */}
-        <section className="py-16 sm:py-28 px-4 sm:px-6">
+        <section id="how-it-works" className="py-16 sm:py-28 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
             <div className="mb-10 sm:mb-16">
               <div className="text-amber-500 text-xs font-semibold uppercase tracking-[0.2em] mb-3 sm:mb-4">How It Works</div>
