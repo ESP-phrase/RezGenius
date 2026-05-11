@@ -11,10 +11,12 @@ async function goToCheckout(opts: { mode: 'payment' | 'subscription'; value: num
   const productName = opts.mode === 'subscription' ? (opts.trial ? 'ResumeGenius Pro ($1 Trial)' : 'ResumeGenius Pro Monthly') : 'ResumeGenius Lifetime'
 
   const contents = [{ content_id: productId, content_type: 'product' as const, content_name: productName }]
+  // Reddit
   rdtTrack('AddToCart', { currency: 'USD', value: opts.value, itemCount: 1 })
+  // TikTok — full conversion funnel
+  ttqTrack('ClickButton', { contents, value: opts.value, currency: 'USD' })
   ttqTrack('AddToCart', { contents, value: opts.value, currency: 'USD' })
   ttqTrack('InitiateCheckout', { contents, value: opts.value, currency: 'USD' })
-  // User is about to enter payment info on Stripe's hosted page
   ttqTrack('AddPaymentInfo', { contents, value: opts.value, currency: 'USD' })
   const res = await fetch('/api/stripe/checkout', {
     method: 'POST',
@@ -30,6 +32,11 @@ export function FreeCTA() {
   return (
     <Link
       href="/start"
+      onClick={() => {
+        const contents = [{ content_id: 'free_signup', content_type: 'product' as const, content_name: 'ResumeGenius Free Signup' }]
+        ttqTrack('ClickButton', { contents, currency: 'USD' })
+        ttqTrack('CompleteRegistration', { contents, currency: 'USD' })
+      }}
       className="w-full border border-stone-700 hover:border-stone-500 hover:bg-stone-800 text-stone-200 font-semibold text-sm py-3 rounded-xl transition-colors text-center block"
     >
       Get started free

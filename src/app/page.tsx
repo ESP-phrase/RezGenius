@@ -5,6 +5,7 @@ import HomeDemoSection from './HomeDemoSection'
 import ExitIntent from './ExitIntent'
 import StickyBar from './StickyBar'
 import HomePageView from './HomePageView'
+import { BuildResumeButton, SeeHowItWorksButton, NavBuildButton, FinalCTAButton, SparkleCTAButton } from './HomeCTA'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -161,11 +162,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3 sm:gap-5">
             <Link href="/sign-in" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Sign in</Link>
-            <Link href="/start">
-              <button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-lg transition-colors inline-flex items-center gap-1.5 whitespace-nowrap">
-                Build My Resume <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </Link>
+            <NavBuildButton />
           </div>
         </nav>
 
@@ -199,16 +196,8 @@ export default function Home() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-center md:items-center md:justify-start gap-3 sm:gap-3 mb-7">
-                <Link href="/start" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-base px-6 py-3.5 rounded-xl transition-colors shadow-[0_0_40px_-10px_rgba(245,158,11,0.6)]">
-                    Build My Resume <ArrowRight className="w-4 h-4" />
-                  </button>
-                </Link>
-                <a href="#how-it-works" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-stone-700 hover:border-stone-500 bg-stone-900/50 hover:bg-stone-800/60 text-stone-100 font-semibold text-base px-6 py-3.5 rounded-xl transition-colors">
-                    <Play className="w-4 h-4 fill-current" /> See How It Works
-                  </button>
-                </a>
+                <BuildResumeButton size="lg" />
+                <SeeHowItWorksButton />
               </div>
 
               {/* Trust indicators row */}
@@ -292,11 +281,7 @@ export default function Home() {
               ))}
             </div>
             <div className="mt-12">
-              <Link href="/start">
-                <button className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-7 py-3.5 rounded-lg transition-colors">
-                  Start Now <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
+              <SparkleCTAButton label="Start Now" />
             </div>
           </div>
         </section>
@@ -540,11 +525,7 @@ export default function Home() {
               Stop sending the resume<br /><em style={{ fontStyle: 'italic', color: '#FBBF24' }}>that&apos;s costing you interviews</em>
             </h2>
             <p className="text-stone-500 mb-8 sm:mb-10 text-sm sm:text-base leading-relaxed">It takes 5 minutes. Your next job is waiting.</p>
-            <Link href="/start">
-              <button className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-base px-8 sm:px-10 py-3.5 sm:py-4 rounded-lg transition-colors">
-                Build My Resume for Free <ArrowRight className="w-5 h-5" />
-              </button>
-            </Link>
+            <FinalCTAButton />
           </div>
         </section>
 
