@@ -13,6 +13,11 @@ type ContentItem = {
   content_id: string
   content_type?: 'product' | 'product_group'
   content_name?: string
+  /** Optional but recommended for funnel events */
+  quantity?: number
+  price?: number
+  brand?: string
+  content_category?: string
 }
 
 type TtqParams = {
@@ -20,6 +25,7 @@ type TtqParams = {
   value?: number
   currency?: string
   search_string?: string
+  description?: string
   /** Used internally — pulled into options. */
   event_id?: string
 }
@@ -36,19 +42,27 @@ export function ttqTrack(event: string, params: TtqParams = {}) {
   const { event_id, ...rest } = params
   const id = event_id ?? generateId()
 
-  // TikTok wants a populated contents array per event spec.
-  // Default to a single product entry tied to ResumeGenius if not given.
+  // TikTok wants a populated contents array per event spec, with quantity + price ideally
   const trackParams: Record<string, unknown> = { ...rest }
-  if (!trackParams.contents) {
-    trackParams.contents = [
-      {
-        content_id: 'resumegenius_pro',
-        content_type: 'product',
-        content_name: 'ResumeGenius',
-      },
-    ]
-  }
+  const eventValue = typeof rest.value === 'number' ? rest.value : 29
+
+  // Normalize contents: ensure each item has quantity + price (TikTok funnel-event requirement)
+  const inputContents = (rest.contents as ContentItem[] | undefined) ?? [
+    { content_id: 'resumegenius_pro', content_type: 'product', content_name: 'ResumeGenius' },
+  ]
+  trackParams.contents = inputContents.map(c => ({
+    content_id: c.content_id,
+    content_type: c.content_type ?? 'product',
+    content_name: c.content_name ?? 'ResumeGenius',
+    quantity: c.quantity ?? 1,
+    price: c.price ?? eventValue,
+    brand: c.brand ?? 'ResumeGenius',
+    content_category: c.content_category ?? 'Career',
+  }))
   if (trackParams.currency === undefined) trackParams.currency = 'USD'
+  if (trackParams.value === undefined) trackParams.value = eventValue
+  if (event === 'Search' && !trackParams.search_string) trackParams.search_string = 'resume'
+  trackParams.description = trackParams.description ?? `${event} on ResumeGenius`
 
   window.ttq.track(event, trackParams, { event_id: id })
 }
