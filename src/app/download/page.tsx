@@ -35,7 +35,17 @@ function DownloadInner() {
         setVerified(!!data.valid)
         if (data.valid) {
           rdtTrack('Purchase', { currency: 'USD', conversionId: sessionId })
-          ttqTrack('CompletePayment', { currency: 'USD', content_type: 'product', event_id: sessionId ?? undefined })
+          ttqTrack('Purchase', {
+            contents: [{ content_id: 'resumegenius_pro', content_type: 'product', content_name: 'ResumeGenius' }],
+            value: 0, // value unknown client-side; server CAPI uses real Stripe amount
+            currency: 'USD',
+            event_id: sessionId ?? undefined,
+          })
+          ttqTrack('PlaceAnOrder', {
+            contents: [{ content_id: 'resumegenius_pro', content_type: 'product', content_name: 'ResumeGenius' }],
+            currency: 'USD',
+            event_id: sessionId ?? undefined,
+          })
         }
       })
       .catch(() => setVerified(false))

@@ -9,24 +9,69 @@ declare global {
   }
 }
 
+type ContentItem = {
+  content_id: string
+  content_type?: 'product' | 'product_group'
+  content_name?: string
+}
+
+type TtqParams = {
+  contents?: ContentItem[]
+  value?: number
+  currency?: string
+  search_string?: string
+  /** Used internally — pulled into options. */
+  event_id?: string
+}
+
 /**
- * Fire a TikTok pixel conversion event.
+ * Fire a TikTok Pixel event with the official rich format.
  *
- * Standard TikTok events: AddToCart, AddPaymentInfo, CompletePayment,
- * InitiateCheckout, PlaceAnOrder, ViewContent, Subscribe, Contact, etc.
- *
- * Pass `event_id` to dedupe with server-side Events API.
+ * Standard events: ViewContent, AddToWishlist, Search, AddPaymentInfo,
+ * AddToCart, InitiateCheckout, PlaceAnOrder, CompleteRegistration, Purchase.
  */
-export function ttqTrack(
-  event: string,
-  params?: Record<string, unknown> & { event_id?: string }
-) {
+export function ttqTrack(event: string, params: TtqParams = {}) {
   if (typeof window === 'undefined' || !window.ttq?.track) return
 
-  const eventId = params?.event_id ?? generateId()
-  const { event_id: _ignore, ...rest } = params ?? {}
+  const { event_id, ...rest } = params
+  const id = event_id ?? generateId()
 
-  window.ttq.track(event, rest, { event_id: eventId })
+  // TikTok wants a populated contents array per event spec.
+  // Default to a single product entry tied to ResumeGenius if not given.
+  const trackParams: Record<string, unknown> = { ...rest }
+  if (!trackParams.contents) {
+    trackParams.contents = [
+      {
+        content_id: 'resumegenius_pro',
+        content_type: 'product',
+        content_name: 'ResumeGenius',
+      },
+    ]
+  }
+  if (trackParams.currency === undefined) trackParams.currency = 'USD'
+
+  window.ttq.track(event, trackParams, { event_id: id })
+}
+
+/**
+ * Identify the current user for advanced matching.
+ * Email + phone must be SHA-256 hashed before passing.
+ */
+export async function ttqIdentify(input: { email?: string; phone?: string; externalId?: string }) {
+  if (typeof window === 'undefined' || !window.ttq?.identify) return
+  const data: Record<string, string> = {}
+  if (input.email) data.email = await sha256(input.email.trim().toLowerCase())
+  if (input.phone) data.phone_number = await sha256(input.phone.trim())
+  if (input.externalId) data.external_id = await sha256(input.externalId.trim())
+  window.ttq.identify(data)
+}
+
+async function sha256(input: string): Promise<string> {
+  if (typeof crypto === 'undefined' || !crypto.subtle) return input
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input))
+  return Array.from(new Uint8Array(buf))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
 }
 
 function generateId(): string {

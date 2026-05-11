@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { CheckCircle, ArrowRight, ShieldCheck, Star } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import { ProCTA, LifetimeCTA, FreeCTA } from './PricingCTA'
+import PricingPageView from './PricingPageView'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -60,6 +61,7 @@ const FAQ = [
 export default function PricingPage() {
   return (
     <div className="min-h-screen bg-stone-950 flex flex-col">
+      <PricingPageView />
       {/* Nav */}
       <nav className="px-4 sm:px-6 py-4 sm:py-5 border-b border-stone-800/60 flex items-center justify-between">
         <Logo size="md" />
