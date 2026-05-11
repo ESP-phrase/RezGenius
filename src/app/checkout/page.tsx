@@ -55,17 +55,11 @@ function CheckoutInner() {
     const value = selected === 'subscription' ? 29 : 149
     const productId = selected === 'subscription' ? 'pro_monthly' : 'lifetime'
     const productName = selected === 'subscription' ? 'ResumeGenius Pro Monthly' : 'ResumeGenius Lifetime'
+    const contents = [{ content_id: productId, content_type: 'product' as const, content_name: productName }]
     rdtTrack('AddToCart', { currency: 'USD', value, itemCount: 1 })
-    ttqTrack('AddToCart', {
-      contents: [{ content_id: productId, content_type: 'product', content_name: productName }],
-      value,
-      currency: 'USD',
-    })
-    ttqTrack('InitiateCheckout', {
-      contents: [{ content_id: productId, content_type: 'product', content_name: productName }],
-      value,
-      currency: 'USD',
-    })
+    ttqTrack('AddToCart', { contents, value, currency: 'USD' })
+    ttqTrack('InitiateCheckout', { contents, value, currency: 'USD' })
+    ttqTrack('AddPaymentInfo', { contents, value, currency: 'USD' })
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',

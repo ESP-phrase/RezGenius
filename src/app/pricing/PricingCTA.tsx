@@ -10,17 +10,12 @@ async function goToCheckout(opts: { mode: 'payment' | 'subscription'; value: num
   const productId = opts.mode === 'subscription' ? (opts.trial ? 'pro_trial' : 'pro_monthly') : 'lifetime'
   const productName = opts.mode === 'subscription' ? (opts.trial ? 'ResumeGenius Pro ($1 Trial)' : 'ResumeGenius Pro Monthly') : 'ResumeGenius Lifetime'
 
+  const contents = [{ content_id: productId, content_type: 'product' as const, content_name: productName }]
   rdtTrack('AddToCart', { currency: 'USD', value: opts.value, itemCount: 1 })
-  ttqTrack('AddToCart', {
-    contents: [{ content_id: productId, content_type: 'product', content_name: productName }],
-    value: opts.value,
-    currency: 'USD',
-  })
-  ttqTrack('InitiateCheckout', {
-    contents: [{ content_id: productId, content_type: 'product', content_name: productName }],
-    value: opts.value,
-    currency: 'USD',
-  })
+  ttqTrack('AddToCart', { contents, value: opts.value, currency: 'USD' })
+  ttqTrack('InitiateCheckout', { contents, value: opts.value, currency: 'USD' })
+  // User is about to enter payment info on Stripe's hosted page
+  ttqTrack('AddPaymentInfo', { contents, value: opts.value, currency: 'USD' })
   const res = await fetch('/api/stripe/checkout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
