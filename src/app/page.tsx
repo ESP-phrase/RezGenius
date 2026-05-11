@@ -4,6 +4,7 @@ import { Logo } from '@/components/Logo'
 import HomeDemoSection from './HomeDemoSection'
 import ExitIntent from './ExitIntent'
 import StickyBar from './StickyBar'
+import HomePageView from './HomePageView'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -143,6 +144,7 @@ export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <HomePageView />
       <main className="min-h-screen bg-stone-950">
 
         {/* Nav */}

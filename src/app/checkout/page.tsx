@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle, Lock, Zap, ArrowLeft, Loader2, ShieldCheck, RefreshCw } from 'lucide-react'
@@ -37,6 +37,17 @@ function CheckoutInner() {
   const [selected, setSelected] = useState<'one-time' | 'subscription'>('subscription')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Fire ViewContent on checkout page load (mid-funnel signal for TikTok)
+  useEffect(() => {
+    ttqTrack('ViewContent', {
+      contents: [
+        { content_id: 'pro_monthly', content_type: 'product', content_name: 'ResumeGenius Pro Monthly' },
+        { content_id: 'lifetime', content_type: 'product', content_name: 'ResumeGenius Lifetime' },
+      ],
+      currency: 'USD',
+    })
+  }, [])
 
   async function handlePay() {
     setLoading(true)
