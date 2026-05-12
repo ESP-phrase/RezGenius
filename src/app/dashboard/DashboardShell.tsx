@@ -13,6 +13,7 @@ import { Logo } from '@/components/Logo'
 import TemplateThumbnail from '@/components/resume/TemplateThumbnail'
 import type { TemplateId } from '@/types/resume'
 import { ttqIdentify, ttqTrack } from '@/lib/ttq'
+import Clarity from '@microsoft/clarity'
 
 type ResumeCard = {
   id: string
@@ -146,10 +147,15 @@ export default function DashboardShell({ user, initialResumes }: Props) {
   }, [])
 
   // Identify the user to TikTok pixel for higher EMQ scoring + fire CompleteRegistration
-  // on first dashboard visit after sign-in
+  // on first dashboard visit after sign-in. Also identify in Clarity for session filtering.
   useEffect(() => {
     if (!user.email) return
     ttqIdentify({ email: user.email, externalId: user.id })
+
+    try {
+      Clarity.identify(user.id, undefined, undefined, user.name ?? user.email)
+      Clarity.setTag('plan', 'free')
+    } catch {}
 
     const firedKey = `tt_complete_reg_${user.id}`
     if (typeof window !== 'undefined' && !sessionStorage.getItem(firedKey)) {
@@ -159,7 +165,7 @@ export default function DashboardShell({ user, initialResumes }: Props) {
       })
       sessionStorage.setItem(firedKey, '1')
     }
-  }, [user.email, user.id])
+  }, [user.email, user.id, user.name])
 
   async function handleGenerate() {
     if (!prompt.trim()) return
