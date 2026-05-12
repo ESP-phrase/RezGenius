@@ -20,12 +20,11 @@ export async function POST(req: NextRequest) {
     const successUrl = `${appUrl}/download?session_id={CHECKOUT_SESSION_ID}&resume_id=${resumeId}`
 
     // Shared base — collect customer details for high EMQ on conversion events.
+    // NOTE: customer_creation is only valid in 'payment' mode. Subscriptions auto-create customers.
     const commonParams = {
       success_url: successUrl,
       cancel_url: cancelUrl,
-      customer_creation: 'always' as const,
       phone_number_collection: { enabled: true },
-      consent_collection: { terms_of_service: 'required' as const },
       allow_promotion_codes: true,
     }
 
@@ -60,11 +59,13 @@ export async function POST(req: NextRequest) {
 
     // Lifetime — free 7-day trial → $149 charged after trial via a subscription
     // that we cancel right after the first invoice succeeds (in webhook).
+    // Requires STRIPE_PRICE_ID_LIFETIME_TRIAL ($149/year price). Without it, the
+    // request still returns gracefully with a helpful error message.
     if (mode === 'lifetime-trial') {
       if (!process.env.STRIPE_PRICE_ID_LIFETIME_TRIAL) {
         return NextResponse.json({
-          error: 'STRIPE_PRICE_ID_LIFETIME_TRIAL not set. Create a $149 yearly subscription price in Stripe and add the price_... ID to Vercel env vars.',
-        }, { status: 500 })
+          error: 'Lifetime trial not yet available. Use the instant-pay option for now.',
+        }, { status: 400 })
       }
       const session = await stripe().checkout.sessions.create({
         ...commonParams,
@@ -86,10 +87,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ url: session.url })
     }
 
-    // Lifetime instant pay (one-time $149, no trial)
+    // Lifetime instant pay (one-time $149, no trial) — payment mode CAN use customer_creation
     const session = await stripe().checkout.sessions.create({
       ...commonParams,
       mode: 'payment',
+      customer_creation: 'always',
       line_items: [
         {
           price_data: {
