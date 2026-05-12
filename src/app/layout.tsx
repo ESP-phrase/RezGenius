@@ -6,6 +6,7 @@ import { PostHogProvider } from "@/components/PostHogProvider";
 import PixelIdentify from "./PixelIdentify";
 import ClarityInit from "./ClarityInit";
 import SupportWidget from "./SupportWidget";
+import HeartbeatPing from "./HeartbeatPing";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({ variable: "--font-jakarta", subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col">
         <ClarityInit />
         <PixelIdentify />
+        <HeartbeatPing />
         <PostHogProvider>
           <Providers>{children}</Providers>
         </PostHogProvider>

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
-import { ShoppingCart, DollarSign, Users, FileText, RefreshCw, TrendingUp, Loader2, LogOut, Crown } from 'lucide-react'
+import { ShoppingCart, DollarSign, Users, FileText, RefreshCw, TrendingUp, Loader2, LogOut, Crown, Activity, CreditCard } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 
 type Metrics = {
@@ -13,6 +13,7 @@ type Metrics = {
   activeSubscriptions: number
   totals: { users: number; resumes: number; leadsOnly: number }
   recentPurchases: { id: string; amount: number; currency: string; created: number; email: string | null; description: string | null }[]
+  live: { total: number; checkout: number; pricing: number; builder: number; byPath: Record<string, number> }
   fetchedAt: number
 }
 
@@ -37,7 +38,8 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
 
   useEffect(() => {
     load()
-    const t = setInterval(load, 30_000) // auto-refresh every 30s
+    // Refresh more often so live counts feel real-time
+    const t = setInterval(load, 10_000)
     return () => clearInterval(t)
   }, [load])
 
@@ -98,6 +100,24 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
 
         {data && (
           <>
+            {/* Live presence banner */}
+            <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/30 rounded-2xl p-4 sm:p-5 mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span className="text-emerald-300 font-bold text-sm uppercase tracking-wider">Live</span>
+                <span className="text-stone-500 text-xs ml-auto">refreshing every 10s</span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <LiveStat icon={Activity} label="On site" value={data.live.total} accent />
+                <LiveStat icon={CreditCard} label="In checkout" value={data.live.checkout} hot />
+                <LiveStat icon={DollarSign} label="On pricing" value={data.live.pricing} />
+                <LiveStat icon={FileText} label="In builder" value={data.live.builder} />
+              </div>
+            </div>
+
             {/* Headline stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
               <Stat icon={ShoppingCart} label="ATC (24h)" value={`${data.atc.last24h}`} sub={`${data.atc.last7d} this week`} />
@@ -154,6 +174,19 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
           </>
         )}
       </main>
+    </div>
+  )
+}
+
+function LiveStat({ icon: Icon, label, value, accent, hot }: { icon: React.ComponentType<{ className?: string }>; label: string; value: number; accent?: boolean; hot?: boolean }) {
+  const color = hot ? 'text-amber-300' : accent ? 'text-emerald-300' : 'text-stone-100'
+  const iconColor = hot ? 'text-amber-400' : accent ? 'text-emerald-400' : 'text-stone-500'
+  return (
+    <div className="bg-stone-950/40 border border-stone-800 rounded-xl p-3">
+      <div className="flex items-center gap-1.5 text-stone-500 text-[10px] uppercase tracking-wider mb-1">
+        <Icon className={`w-3 h-3 ${iconColor}`} /> {label}
+      </div>
+      <div className={`text-2xl font-extrabold ${color} ${value > 0 ? 'animate-pulse-once' : ''}`}>{value}</div>
     </div>
   )
 }

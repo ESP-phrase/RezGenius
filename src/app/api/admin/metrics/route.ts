@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { isAdmin } from '@/lib/admin'
+import { snapshot as presenceSnapshot } from '@/lib/presence'
 
 let _stripe: Stripe | null = null
 function stripe() {
@@ -85,6 +86,7 @@ export async function GET() {
         leadsOnly: dbUserCount - dbResumeCount,
       },
       recentPurchases,
+      live: presenceSnapshot(),
       fetchedAt: Date.now(),
     })
   } catch (err) {
