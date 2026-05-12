@@ -38,6 +38,7 @@ type TtqParams = {
  */
 export function ttqTrack(event: string, params: TtqParams = {}) {
   if (typeof window === 'undefined' || !window.ttq?.track) return
+  if (localStorage.getItem('rg_admin_no_track') === '1') return // Admin sessions excluded
 
   const { event_id, ...rest } = params
   const id = event_id ?? generateId()

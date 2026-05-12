@@ -19,6 +19,7 @@ export function rdtTrack(
   data?: Record<string, unknown> & { conversionId?: string }
 ) {
   if (typeof window === 'undefined' || typeof window.rdt !== 'function') return
+  if (localStorage.getItem('rg_admin_no_track') === '1') return // Admin sessions excluded
 
   const payload = {
     ...data,

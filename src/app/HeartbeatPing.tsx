@@ -13,6 +13,7 @@ export default function HeartbeatPing() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
+    if (localStorage.getItem('rg_admin_no_track') === '1') return // Skip admin sessions
 
     let sid = localStorage.getItem('rg_anon_id')
     if (!sid) {

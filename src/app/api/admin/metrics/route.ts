@@ -5,6 +5,14 @@ import { db } from '@/lib/db'
 import { isAdmin } from '@/lib/admin'
 import { snapshot as presenceSnapshot } from '@/lib/presence'
 
+// Admin emails to filter out of customer analytics so admin's own
+// test sessions don't pollute the dashboard numbers.
+const ADMIN_FILTER_EMAILS = [
+  'aubreynicholsacc@gmail.com',
+  'aubreynicholsaccc@gmail.com',
+  ...(process.env.ADMIN_EMAILS ?? '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean),
+]
+
 let _stripe: Stripe | null = null
 function stripe() {
   if (!_stripe) _stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '')
@@ -35,25 +43,28 @@ export async function GET() {
   const weekAgoDate = new Date(weekAgo * 1000)
 
   try {
-    // Pull last ~100 of each — enough for most early-stage volume
+    // Exclude admin emails from all customer-facing counts
+    const notAdminFilter = { email: { notIn: ADMIN_FILTER_EMAILS } }
+
     const [sessions24h, sessions7d, sessions30d, paymentsAll, subs, dbUserCount, dbResumeCount, logins24h, logins7d, recentLogins, newUsers24h, recentUsers] = await Promise.all([
       stripe().checkout.sessions.list({ created: { gte: dayAgo }, limit: 100 }),
       stripe().checkout.sessions.list({ created: { gte: weekAgo }, limit: 100 }),
       stripe().checkout.sessions.list({ created: { gte: monthAgo }, limit: 100 }),
       stripe().paymentIntents.list({ created: { gte: monthAgo }, limit: 100 }),
       stripe().subscriptions.list({ status: 'active', limit: 100 }),
-      db.user.count(),
+      db.user.count({ where: notAdminFilter }),
       db.savedResume.count(),
-      db.magicToken.count({ where: { usedAt: { gte: dayAgoDate } } }),
-      db.magicToken.count({ where: { usedAt: { gte: weekAgoDate } } }),
+      db.magicToken.count({ where: { usedAt: { gte: dayAgoDate }, email: { notIn: ADMIN_FILTER_EMAILS } } }),
+      db.magicToken.count({ where: { usedAt: { gte: weekAgoDate }, email: { notIn: ADMIN_FILTER_EMAILS } } }),
       db.magicToken.findMany({
-        where: { usedAt: { not: null } },
+        where: { usedAt: { not: null }, email: { notIn: ADMIN_FILTER_EMAILS } },
         orderBy: { usedAt: 'desc' },
         take: 20,
         select: { email: true, usedAt: true },
       }),
-      db.user.count({ where: { createdAt: { gte: dayAgoDate } } }),
+      db.user.count({ where: { createdAt: { gte: dayAgoDate }, ...notAdminFilter } }),
       db.user.findMany({
+        where: notAdminFilter,
         orderBy: { createdAt: 'desc' },
         take: 30,
         select: { email: true, name: true, createdAt: true },
