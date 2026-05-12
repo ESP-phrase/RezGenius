@@ -1,0 +1,95 @@
+import Stripe from 'stripe'
+import { NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { isAdmin } from '@/lib/admin'
+
+let _stripe: Stripe | null = null
+function stripe() {
+  if (!_stripe) _stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '')
+  return _stripe
+}
+
+/**
+ * GET /api/admin/metrics
+ * Admin-only. Returns:
+ *   - Last 24h: AddToCart (Checkout sessions created), Purchases (succeeded), Revenue
+ *   - Last 7d / 30d totals
+ *   - Active subscriptions count
+ *   - Recent purchases (last 20)
+ *   - Lead count (users in DB with no resume = pure leads)
+ */
+export async function GET() {
+  const session = await auth()
+  if (!isAdmin(session?.user?.email)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  const now = Math.floor(Date.now() / 1000)
+  const dayAgo = now - 24 * 60 * 60
+  const weekAgo = now - 7 * 24 * 60 * 60
+  const monthAgo = now - 30 * 24 * 60 * 60
+
+  try {
+    // Pull last ~100 of each — enough for most early-stage volume
+    const [sessions24h, sessions7d, sessions30d, paymentsAll, subs, dbUserCount, dbResumeCount] = await Promise.all([
+      stripe().checkout.sessions.list({ created: { gte: dayAgo }, limit: 100 }),
+      stripe().checkout.sessions.list({ created: { gte: weekAgo }, limit: 100 }),
+      stripe().checkout.sessions.list({ created: { gte: monthAgo }, limit: 100 }),
+      stripe().paymentIntents.list({ created: { gte: monthAgo }, limit: 100 }),
+      stripe().subscriptions.list({ status: 'active', limit: 100 }),
+      db.user.count(),
+      db.savedResume.count(),
+    ])
+
+    const sumPaid = (list: { data: Stripe.Checkout.Session[] }) =>
+      list.data.filter(s => s.payment_status === 'paid' || s.status === 'complete')
+        .reduce((acc, s) => acc + (s.amount_total ?? 0) / 100, 0)
+
+    const countAtc = (list: { data: Stripe.Checkout.Session[] }) => list.data.length
+    const countPaid = (list: { data: Stripe.Checkout.Session[] }) =>
+      list.data.filter(s => s.payment_status === 'paid' || s.status === 'complete' || s.mode === 'subscription').length
+
+    const recentPurchases = paymentsAll.data
+      .filter(p => p.status === 'succeeded')
+      .slice(0, 20)
+      .map(p => ({
+        id: p.id,
+        amount: (p.amount_received ?? p.amount) / 100,
+        currency: p.currency.toUpperCase(),
+        created: p.created * 1000,
+        email: typeof p.receipt_email === 'string' ? p.receipt_email : null,
+        description: p.description ?? null,
+      }))
+
+    return NextResponse.json({
+      atc: {
+        last24h: countAtc(sessions24h),
+        last7d: countAtc(sessions7d),
+        last30d: countAtc(sessions30d),
+      },
+      purchases: {
+        last24h: countPaid(sessions24h),
+        last7d: countPaid(sessions7d),
+        last30d: countPaid(sessions30d),
+      },
+      revenue: {
+        last24h: sumPaid(sessions24h),
+        last7d: sumPaid(sessions7d),
+        last30d: sumPaid(sessions30d),
+      },
+      activeSubscriptions: subs.data.length,
+      totals: {
+        users: dbUserCount,
+        resumes: dbResumeCount,
+        leadsOnly: dbUserCount - dbResumeCount,
+      },
+      recentPurchases,
+      fetchedAt: Date.now(),
+    })
+  } catch (err) {
+    console.error('[admin/metrics]', err)
+    const message = err instanceof Error ? err.message : 'Failed to fetch metrics'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
