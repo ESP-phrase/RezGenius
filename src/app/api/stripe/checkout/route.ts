@@ -55,7 +55,9 @@ export async function POST(req: NextRequest) {
         {
           price_data: {
             currency: 'usd',
-            unit_amount: Number(process.env.PRICE_PER_RESUME || 14900),
+            // Hardcoded — env-var fallback caused $3.24 charge when stale value was set.
+            // Update this and STRIPE_PRICE_ID_SUBSCRIPTION if pricing changes.
+            unit_amount: 14900, // $149.00 Lifetime
             product_data: { name: 'ResumeGenius Lifetime', description: 'Lifetime access · pay once' },
           },
           quantity: 1,
