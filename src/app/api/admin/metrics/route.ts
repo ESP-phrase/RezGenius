@@ -36,7 +36,7 @@ export async function GET() {
 
   try {
     // Pull last ~100 of each — enough for most early-stage volume
-    const [sessions24h, sessions7d, sessions30d, paymentsAll, subs, dbUserCount, dbResumeCount, logins24h, logins7d, recentLogins, newUsers24h] = await Promise.all([
+    const [sessions24h, sessions7d, sessions30d, paymentsAll, subs, dbUserCount, dbResumeCount, logins24h, logins7d, recentLogins, newUsers24h, recentUsers] = await Promise.all([
       stripe().checkout.sessions.list({ created: { gte: dayAgo }, limit: 100 }),
       stripe().checkout.sessions.list({ created: { gte: weekAgo }, limit: 100 }),
       stripe().checkout.sessions.list({ created: { gte: monthAgo }, limit: 100 }),
@@ -53,6 +53,11 @@ export async function GET() {
         select: { email: true, usedAt: true },
       }),
       db.user.count({ where: { createdAt: { gte: dayAgoDate } } }),
+      db.user.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 30,
+        select: { email: true, name: true, createdAt: true },
+      }),
     ])
 
     const sumPaid = (list: { data: Stripe.Checkout.Session[] }) =>
@@ -103,6 +108,11 @@ export async function GET() {
         newSignupsLast24h: newUsers24h,
       },
       recentLogins: recentLogins.map(l => ({ email: l.email, at: l.usedAt?.getTime() ?? 0 })),
+      recentUsers: recentUsers.map(u => ({
+        email: u.email,
+        name: u.name,
+        at: u.createdAt.getTime(),
+      })),
       recentPurchases,
       live: presenceSnapshot(),
       fetchedAt: Date.now(),

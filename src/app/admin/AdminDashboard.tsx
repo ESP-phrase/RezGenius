@@ -16,6 +16,7 @@ type Metrics = {
   live: { total: number; checkout: number; pricing: number; builder: number; byPath: Record<string, number> }
   logins: { last24h: number; last7d: number; newSignupsLast24h: number }
   recentLogins: { email: string; at: number }[]
+  recentUsers: { email: string; name: string | null; at: number }[]
   fetchedAt: number
 }
 
@@ -148,6 +149,47 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
                 <span className="text-stone-500">ATC → Purchase rate</span>
                 <span className="text-stone-100 font-bold">{conv.toFixed(1)}%</span>
               </div>
+            </div>
+
+            {/* Recent signups (emails captured) */}
+            <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5 sm:p-6 mb-6 sm:mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-bold text-base flex items-center gap-2">
+                  <UserPlus className="w-4 h-4 text-amber-400" /> Recent signups & email captures
+                </h2>
+                <button
+                  onClick={() => {
+                    const csv = ['email,name,createdAt']
+                      .concat(data.recentUsers.map(u => `${u.email},"${u.name ?? ''}",${new Date(u.at).toISOString()}`))
+                      .join('\n')
+                    const blob = new Blob([csv], { type: 'text/csv' })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement('a')
+                    a.href = url
+                    a.download = `emails-${new Date().toISOString().slice(0,10)}.csv`
+                    a.click()
+                    URL.revokeObjectURL(url)
+                  }}
+                  className="text-amber-500 hover:text-amber-400 text-xs font-medium transition-colors"
+                >
+                  Export CSV
+                </button>
+              </div>
+              {data.recentUsers.length === 0 ? (
+                <p className="text-stone-500 text-sm py-6 text-center">No signups yet.</p>
+              ) : (
+                <div className="divide-y divide-stone-800/60 max-h-96 overflow-y-auto">
+                  {data.recentUsers.map((u, i) => (
+                    <div key={`${u.email}-${i}`} className="flex items-center justify-between py-2.5 gap-3">
+                      <div className="min-w-0">
+                        <div className="text-stone-100 text-sm truncate">{u.email}</div>
+                        {u.name && <div className="text-stone-600 text-xs">{u.name}</div>}
+                      </div>
+                      <div className="text-stone-500 text-xs whitespace-nowrap">{relativeTime(u.at)}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Recent logins */}
