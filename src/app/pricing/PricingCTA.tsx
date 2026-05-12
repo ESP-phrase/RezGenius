@@ -6,9 +6,13 @@ import { rdtTrack } from '@/lib/rdt'
 import { ttqTrack } from '@/lib/ttq'
 import Link from 'next/link'
 
-async function goToCheckout(opts: { mode: 'payment' | 'subscription' | 'lifetime-trial'; value: number; trial?: boolean }) {
-  const productId = opts.mode === 'subscription' ? (opts.trial ? 'pro_trial' : 'pro_monthly') : opts.mode === 'lifetime-trial' ? 'lifetime_trial' : 'lifetime'
-  const productName = opts.mode === 'subscription' ? (opts.trial ? 'ResumeGenius Pro (Free Trial)' : 'ResumeGenius Pro Monthly') : opts.mode === 'lifetime-trial' ? 'ResumeGenius Lifetime (7-day free trial)' : 'ResumeGenius Lifetime'
+async function goToCheckout(opts: { mode: 'payment' | 'subscription' | 'lifetime-trial' | 'one-resume'; value: number; trial?: boolean }) {
+  let productId: string
+  let productName: string
+  if (opts.mode === 'one-resume') { productId = 'one_resume'; productName = 'ResumeGenius Single Resume' }
+  else if (opts.mode === 'lifetime-trial') { productId = 'lifetime_trial'; productName = 'ResumeGenius Lifetime (7-day free trial)' }
+  else if (opts.mode === 'subscription') { productId = opts.trial ? 'pro_trial' : 'pro_monthly'; productName = opts.trial ? 'ResumeGenius Pro (Free Trial)' : 'ResumeGenius Pro Monthly' }
+  else { productId = 'lifetime'; productName = 'ResumeGenius Lifetime' }
 
   const contents = [{ content_id: productId, content_type: 'product' as const, content_name: productName }]
   // Reddit
@@ -41,6 +45,20 @@ export function FreeCTA() {
     >
       Get started free
     </Link>
+  )
+}
+
+export function OneResumeCTA() {
+  const [loading, setLoading] = useState(false)
+  return (
+    <button
+      onClick={async () => { setLoading(true); await goToCheckout({ mode: 'one-resume', value: 7.99 }) }}
+      disabled={loading}
+      className="w-full bg-stone-800 hover:bg-stone-700 text-stone-100 font-semibold text-sm py-3 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 border border-stone-700"
+    >
+      {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+      {loading ? 'Redirecting…' : 'Get one resume — $7.99'}
+    </button>
   )
 }
 

@@ -87,6 +87,34 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ url: session.url })
     }
 
+    // $7.99 one-time single-resume download (lowest entry tier)
+    if (mode === 'one-resume') {
+      const session = await stripe().checkout.sessions.create({
+        ...commonParams,
+        mode: 'payment',
+        customer_creation: 'always',
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              unit_amount: 799, // $7.99
+              product_data: { name: 'ResumeGenius Single Resume', description: 'One AI-enhanced resume PDF · 20% off' },
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: { resumeId: resumeId ?? '', plan: 'one_resume' },
+      })
+
+      await Promise.allSettled([
+        rdtCapiTrack({ eventName: 'AddToCart', conversionId: session.id, value: 7.99, currency: 'USD', ipAddress, userAgent }),
+        ttqCapiTrack({ eventName: 'AddToCart', eventId: session.id, value: 7.99, currency: 'USD', ipAddress, userAgent, contentId: 'one_resume', contentName: 'ResumeGenius Single Resume' }),
+        ttqCapiTrack({ eventName: 'InitiateCheckout', eventId: session.id + '_ic', value: 7.99, currency: 'USD', ipAddress, userAgent, contentId: 'one_resume' }),
+      ])
+
+      return NextResponse.json({ url: session.url })
+    }
+
     // Lifetime instant pay (one-time $149, no trial) — payment mode CAN use customer_creation
     const session = await stripe().checkout.sessions.create({
       ...commonParams,

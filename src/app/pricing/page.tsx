@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { CheckCircle, ArrowRight, ShieldCheck, Star } from 'lucide-react'
 import { Logo } from '@/components/Logo'
-import { ProCTA, LifetimeCTA, FreeCTA } from './PricingCTA'
+import { ProCTA, LifetimeCTA, OneResumeCTA } from './PricingCTA'
 import PricingPageView from './PricingPageView'
 import type { Metadata } from 'next'
 
@@ -10,11 +10,12 @@ export const metadata: Metadata = {
   description: 'Free to build. Pro at $29/month. Lifetime at $149. All plans include a 100% money-back guarantee.',
 }
 
-const FREE = [
-  'Build & preview your resume',
-  'Pick from 6 templates',
-  'Export to text/clipboard',
-  'No credit card required',
+const ONE_RESUME = [
+  '1 polished resume PDF',
+  'All AI bullet rewrites',
+  'All 6 templates',
+  'ATS-optimized format',
+  'Yours to keep forever',
 ]
 
 const PRO = [
@@ -102,23 +103,27 @@ export default function PricingPage() {
         <section className="px-4 sm:px-6 pb-16">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5">
 
-            {/* Free */}
+            {/* Single Resume — $7.99 */}
             <div className="bg-stone-900 border border-stone-800 rounded-2xl p-7 flex flex-col">
               <div className="mb-5">
-                <div className="text-stone-300 font-bold text-base mb-1">No card required</div>
-                <p className="text-stone-500 text-sm">Get a feel for how it works. No payment required.</p>
+                <div className="text-stone-300 font-bold text-base mb-1">$7.99 One Resume</div>
+                <p className="text-stone-500 text-sm">Just need one resume? Get a single polished PDF — no subscription.</p>
               </div>
               <div className="border-t border-stone-800 pt-6 mb-6 flex-1">
-                <div className="text-5xl font-black text-stone-100 mb-1" style={{ fontFamily: 'var(--font-serif)' }}>Free</div>
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="text-5xl font-black text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>$7.99</span>
+                  <span className="text-stone-500 text-sm line-through">$9.99</span>
+                  <span className="bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-0.5 rounded-full">20% off</span>
+                </div>
                 <ul className="space-y-2.5 mt-6">
-                  {FREE.map((f) => (
+                  {ONE_RESUME.map((f) => (
                     <li key={f} className="flex items-center gap-2.5 text-sm text-stone-400">
                       <CheckCircle className="w-4 h-4 text-stone-600 flex-shrink-0" /> {f}
                     </li>
                   ))}
                 </ul>
               </div>
-              <FreeCTA />
+              <OneResumeCTA />
             </div>
 
             {/* Pro — featured */}
@@ -189,23 +194,23 @@ export default function PricingPage() {
               <div className="min-w-[600px]">
                 <div className="grid grid-cols-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-stone-500 border-b border-stone-800">
                   <div className="px-3 sm:px-5 py-3 sm:py-4">Feature</div>
-                  <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800">Free</div>
+                  <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800">One · $7.99</div>
                   <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800 text-amber-400">Pro · $29/mo</div>
                   <div className="px-3 sm:px-5 py-3 sm:py-4 text-center border-l border-stone-800">Lifetime · $149</div>
                 </div>
                 {[
                   ['Build & preview resume', true, true, true],
-                  ['AI bullet rewriter', '3 free', 'Unlimited', 'Unlimited'],
-                  ['AI Generate from prompt', false, true, true],
+                  ['AI bullet rewriter', '1 resume', 'Unlimited', 'Unlimited'],
+                  ['AI Generate from prompt', true, true, true],
                   ['All 6 templates', true, true, true],
                   ['ATS-optimized format', true, true, true],
-                  ['PDF downloads', false, 'Unlimited', 'Unlimited'],
+                  ['PDF downloads', '1', 'Unlimited', 'Unlimited'],
                   ['Priority support', false, true, true],
-                  ['Pay once, no recurring', false, false, true],
-                ].map(([feature, free, pro, lifetime]) => (
+                  ['Pay once, no recurring', true, false, true],
+                ].map(([feature, one, pro, lifetime]) => (
                   <div key={String(feature)} className="grid grid-cols-4 border-b border-stone-800/60 last:border-0">
                     <div className="px-3 sm:px-5 py-3 sm:py-4 text-stone-400 text-xs sm:text-sm">{feature}</div>
-                    <Cell value={free} />
+                    <Cell value={one} />
                     <Cell value={pro} highlight />
                     <Cell value={lifetime} />
                   </div>
