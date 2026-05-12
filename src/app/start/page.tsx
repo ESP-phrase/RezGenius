@@ -11,7 +11,9 @@ export default function StartPage() {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('resumeStartType', type)
     }
-    router.push('/sign-in')
+    // Skip sign-in for anonymous users — they can build straight away.
+    // Auth happens only when they hit Download PDF (gated by Stripe checkout).
+    router.push('/builder')
   }
 
   return (

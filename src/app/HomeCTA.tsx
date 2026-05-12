@@ -19,7 +19,7 @@ export function BuildResumeButton({ size = 'md', label = 'Build My Resume' }: { 
     lg: 'text-base px-6 py-3.5',
   }
   return (
-    <Link href="/start" onClick={() => fireSignupEvents(label)}>
+    <Link href="/builder" onClick={() => fireSignupEvents(label)}>
       <button className={`inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold rounded-xl transition-colors shadow-[0_0_40px_-10px_rgba(245,158,11,0.6)] whitespace-nowrap ${sizes[size]}`}>
         {label} <ArrowRight className="w-3.5 h-3.5" />
       </button>
@@ -67,7 +67,7 @@ export function FinalCTAButton() {
 
 export function SparkleCTAButton({ label }: { label: string }) {
   return (
-    <Link href="/start" onClick={() => fireSignupEvents(label)}>
+    <Link href="/builder" onClick={() => fireSignupEvents(label)}>
       <button className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-7 py-3.5 rounded-lg transition-colors">
         <Sparkles className="w-4 h-4" /> {label} <ArrowRight className="w-4 h-4" />
       </button>

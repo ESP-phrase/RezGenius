@@ -54,7 +54,8 @@ export default function HeroEmailCapture() {
       // Persist email for the builder to prefill
       try { sessionStorage.setItem('captured_email', email.trim()) } catch {}
 
-      window.location.href = '/start'
+      // Send straight to builder — no sign-in friction
+      window.location.href = '/builder'
     } catch {
       setErr('Could not submit. Try again.')
       setLoading(false)

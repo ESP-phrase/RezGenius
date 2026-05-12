@@ -58,14 +58,40 @@ export default function ResumeBuilder() {
   const [loading, setLoading] = useState(!!resumeId)
 
   // Prefill email if user submitted it on the hero email-capture form
+  // AND restore anonymous draft from localStorage if no resumeId from DB
   useEffect(() => {
     if (typeof window === 'undefined') return
+
+    // Anonymous draft restore (only if not editing a DB-saved resume)
+    if (!resumeId) {
+      const draft = localStorage.getItem('anon_resume_draft')
+      if (draft) {
+        try {
+          const parsed = JSON.parse(draft)
+          if (parsed.resume) setResume(parsed.resume)
+          if (parsed.templateId) setTemplateId(parsed.templateId)
+          if (parsed.templateConfig) setTemplateConfig(parsed.templateConfig)
+        } catch {}
+      }
+    }
+
     const captured = sessionStorage.getItem('captured_email')
     if (captured) {
       setResume(r => r.personalInfo.email ? r : { ...r, personalInfo: { ...r.personalInfo, email: captured } })
       sessionStorage.removeItem('captured_email')
     }
-  }, [])
+  }, [resumeId])
+
+  // Auto-save anonymous draft to localStorage on every change
+  useEffect(() => {
+    if (typeof window === 'undefined' || resumeId) return // only for anon users
+    const t = setTimeout(() => {
+      try {
+        localStorage.setItem('anon_resume_draft', JSON.stringify({ resume, templateId, templateConfig }))
+      } catch {}
+    }, 500) // debounce
+    return () => clearTimeout(t)
+  }, [resume, templateId, templateConfig, resumeId])
 
   useEffect(() => {
     if (!resumeId) return
