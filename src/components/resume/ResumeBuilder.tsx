@@ -257,8 +257,8 @@ export default function ResumeBuilder() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Form panel */}
-        <div className="w-[55%] flex flex-col border-r border-stone-800 overflow-y-auto">
-          <div className="p-8 flex-1">
+        <div className="w-full lg:w-[55%] flex flex-col lg:border-r border-stone-800 overflow-y-auto">
+          <div className="p-4 sm:p-6 lg:p-8 flex-1">
             <div className="mb-8">
               <div className="flex items-center gap-2 text-amber-500 text-xs font-semibold uppercase tracking-widest mb-2">
                 {currentStep.icon} {currentStep.label}
@@ -567,8 +567,8 @@ export default function ResumeBuilder() {
           </div>
         </div>
 
-        {/* Live preview panel */}
-        <div className="w-[45%] bg-stone-950 p-6 overflow-y-auto">
+        {/* Live preview panel — hidden on mobile, visible on lg+ */}
+        <div className="hidden lg:block w-[45%] bg-stone-950 p-6 overflow-y-auto">
           <div className="text-xs text-stone-500 font-medium mb-4 flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
             Live Preview · {TEMPLATES.find(t => t.id === templateId)?.name} template
@@ -576,6 +576,39 @@ export default function ResumeBuilder() {
           <ResumePreview resume={resume} templateId={templateId} />
         </div>
       </div>
+
+      {/* Mobile-only floating preview button */}
+      <MobilePreviewSheet resume={resume} templateId={templateId} />
     </div>
+  )
+}
+
+function MobilePreviewSheet({ resume, templateId }: { resume: Resume; templateId: TemplateId }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      {/* Floating button — only visible on mobile/tablet */}
+      <button
+        onClick={() => setOpen(true)}
+        aria-label="Preview resume"
+        className="lg:hidden fixed bottom-20 right-5 z-40 inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm h-12 px-5 rounded-full shadow-[0_8px_30px_-5px_rgba(245,158,11,0.6)] transition-transform active:scale-95"
+      >
+        <span>👁 Preview</span>
+      </button>
+
+      {open && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-stone-950 flex flex-col">
+          <header className="px-4 py-3 border-b border-stone-800 flex items-center justify-between">
+            <div className="text-stone-100 font-bold text-sm">Resume Preview</div>
+            <button onClick={() => setOpen(false)} className="text-stone-400 hover:text-stone-100 text-sm font-medium">
+              ← Back to edit
+            </button>
+          </header>
+          <div className="flex-1 overflow-y-auto p-4 bg-stone-950">
+            <ResumePreview resume={resume} templateId={templateId} />
+          </div>
+        </div>
+      )}
+    </>
   )
 }

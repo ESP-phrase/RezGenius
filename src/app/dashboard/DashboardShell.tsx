@@ -247,24 +247,28 @@ export default function DashboardShell({ user, initialResumes }: Props) {
   return (
     <div className="min-h-screen bg-stone-950 flex flex-col">
       {/* Nav */}
-      <header className="sticky top-0 z-40 bg-stone-950/90 backdrop-blur-md border-b border-stone-800/60 px-6 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-stone-950/90 backdrop-blur-md border-b border-stone-800/60 px-3 sm:px-6 py-3 flex items-center justify-between gap-2">
         <Logo size="md" />
-        <div className="flex items-center gap-3">
-          <Button
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* AI Generate — icon-only on mobile, full on desktop */}
+          <button
             onClick={() => setShowPrompt(true)}
-            className="hidden sm:flex bg-stone-800 hover:bg-stone-700 text-stone-100 font-semibold h-9 px-4 gap-1.5 border border-stone-700"
+            aria-label="AI Generate"
+            className="inline-flex items-center gap-1.5 bg-stone-800 hover:bg-stone-700 text-stone-100 font-semibold h-9 px-2.5 sm:px-4 rounded-lg border border-stone-700 transition-colors"
           >
             <Sparkles className="w-4 h-4 text-amber-400" />
-            AI Generate
-          </Button>
-          <Button
+            <span className="hidden sm:inline">AI Generate</span>
+          </button>
+          {/* New Resume — icon-only on mobile */}
+          <button
             onClick={handleNew}
             disabled={creating}
-            className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold h-9 px-4 gap-1.5"
+            aria-label="New Resume"
+            className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold h-9 px-2.5 sm:px-4 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
           >
             <Plus className="w-4 h-4" />
-            {creating ? 'Creating…' : 'New Resume'}
-          </Button>
+            <span className="hidden sm:inline">{creating ? 'Creating…' : 'New Resume'}</span>
+          </button>
           <UserMenu user={user} />
         </div>
       </header>
@@ -283,11 +287,18 @@ export default function DashboardShell({ user, initialResumes }: Props) {
               <p className="text-stone-300 text-sm font-medium mb-0.5">Ready to land your next opportunity?</p>
               <p className="text-stone-500 text-xs mb-3">Create a standout resume in minutes with AI-powered suggestions.</p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+              <div className="hidden sm:grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <FeaturePill icon={Brain} title="AI-Powered" sub="Smart suggestions" />
                 <FeaturePill icon={Shield} title="ATS-Optimized" sub="Pass tracking" />
                 <FeaturePill icon={LayoutTemplate} title="Pro Templates" sub="Designed to impress" />
                 <FeaturePill icon={Lightbulb} title="Expert Tips" sub="Step by step" />
+              </div>
+              {/* Mobile: condensed inline list */}
+              <div className="flex sm:hidden flex-wrap gap-1.5 mb-3 text-[10px]">
+                <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-300 px-2 py-1 rounded-full"><Brain className="w-2.5 h-2.5" /> AI</span>
+                <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-300 px-2 py-1 rounded-full"><Shield className="w-2.5 h-2.5" /> ATS</span>
+                <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-300 px-2 py-1 rounded-full"><LayoutTemplate className="w-2.5 h-2.5" /> Templates</span>
+                <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-300 px-2 py-1 rounded-full"><Lightbulb className="w-2.5 h-2.5" /> Tips</span>
               </div>
 
               <Button
@@ -483,7 +494,7 @@ export default function DashboardShell({ user, initialResumes }: Props) {
       {/* AI Generate modal */}
       {showPrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/80 backdrop-blur-sm px-4">
-          <div className="bg-stone-900 border border-stone-700 rounded-2xl p-6 max-w-lg w-full shadow-2xl">
+          <div className="bg-stone-900 border border-stone-700 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
@@ -540,7 +551,7 @@ export default function DashboardShell({ user, initialResumes }: Props) {
       {/* Delete confirmation modal */}
       {confirmDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/80 backdrop-blur-sm px-4">
-          <div className="bg-stone-900 border border-stone-700 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+          <div className="bg-stone-900 border border-stone-700 rounded-2xl p-5 sm:p-6 max-w-sm w-full shadow-2xl">
             <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
               <Trash2 className="w-5 h-5 text-red-400" />
             </div>
