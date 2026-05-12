@@ -2,11 +2,10 @@ import Link from 'next/link'
 import { CheckCircle, Star, ArrowRight, Play, Sparkles, Shield, FileText, Lock, Clock, DollarSign, ChevronDown } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import HomeDemoSection from './HomeDemoSection'
-import ExitIntent from './ExitIntent'
 import StickyBar from './StickyBar'
 import HomePageView from './HomePageView'
 import { BuildResumeButton, SeeHowItWorksButton, NavBuildButton, FinalCTAButton, SparkleCTAButton } from './HomeCTA'
-import DiscountPopup from './DiscountPopup'
+import PopupAB from './PopupAB'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -544,9 +543,8 @@ export default function Home() {
         </footer>
 
       </main>
-      <ExitIntent />
+      <PopupAB />
       <StickyBar />
-      <DiscountPopup />
     </>
   )
 }

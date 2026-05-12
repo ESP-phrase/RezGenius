@@ -1,143 +1,165 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { X, Sparkles, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+import { X, Sparkles, Mail, Loader2, ArrowRight, Clock, CheckCircle } from 'lucide-react'
+import { ttqTrack, ttqIdentify } from '@/lib/ttq'
+import { rdtTrack } from '@/lib/rdt'
 
+/**
+ * Exit-intent popup with $7.99 one-resume offer + email capture.
+ * Triggered when cursor leaves the viewport (going for back button / address bar).
+ *
+ * Captures email -> saves to leads DB -> immediately redirects to Stripe checkout.
+ */
 export default function ExitIntent() {
   const [show, setShow] = useState(false)
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [err, setErr] = useState('')
 
   useEffect(() => {
-    // Only show once per session
+    if (typeof window === 'undefined') return
     if (sessionStorage.getItem('exit_intent_shown')) return
 
     let triggered = false
-
     function handleMouseLeave(e: MouseEvent) {
-      // Trigger when cursor moves near the top (toward back button / address bar)
       if (triggered || e.clientY > 50) return
       triggered = true
       sessionStorage.setItem('exit_intent_shown', '1')
-      // Small delay so it doesn't feel jarring
       setTimeout(() => setShow(true), 200)
     }
-
-    // Wait 5 seconds before enabling — don't fire on fresh page load
     const timer = setTimeout(() => {
       document.addEventListener('mouseleave', handleMouseLeave)
     }, 5000)
-
     return () => {
       clearTimeout(timer)
       document.removeEventListener('mouseleave', handleMouseLeave)
     }
   }, [])
 
+  async function claim(e: React.FormEvent) {
+    e.preventDefault()
+    if (!email.trim()) return
+    setLoading(true)
+    setErr('')
+    try {
+      // Save email lead
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), source: 'exit_intent_7_99', promoCode: 'one-resume-7.99' }),
+      })
+
+      // Pixel events
+      try { await ttqIdentify({ email: email.trim() }) } catch {}
+      try {
+        ttqTrack('Lead', {
+          contents: [{ content_id: 'exit_intent_lead', content_type: 'product', content_name: 'Exit Intent Lead' }],
+          currency: 'USD',
+        })
+        ttqTrack('CompleteRegistration', {
+          contents: [{ content_id: 'exit_intent_lead', content_type: 'product', content_name: 'Exit Intent Lead' }],
+          currency: 'USD',
+        })
+      } catch {}
+      try { rdtTrack('SignUp') } catch {}
+
+      // Send straight to Stripe — $7.99 one-time
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'one-resume', resumeId: 'direct' }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+        return
+      }
+      setErr(data.error || 'Could not start checkout. Try again.')
+    } catch {
+      setErr('Something went wrong. Try again.')
+    }
+    setLoading(false)
+  }
+
   if (!show) return null
 
   return (
-    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-stone-950/80 backdrop-blur-sm px-4 animate-in fade-in duration-200">
-      <div className="bg-stone-900 border border-stone-700 rounded-2xl p-8 max-w-md w-full shadow-2xl relative animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-stone-950/85 backdrop-blur-sm px-4 animate-in fade-in duration-200">
+      <div className="bg-stone-900 border border-amber-500/40 rounded-2xl p-7 max-w-md w-full shadow-[0_30px_90px_-15px_rgba(245,158,11,0.5)] relative animate-in zoom-in-95 duration-200">
         <button
           onClick={() => setShow(false)}
-          className="absolute top-4 right-4 text-stone-600 hover:text-stone-300 transition-colors"
+          aria-label="Dismiss"
+          className="absolute top-4 right-4 text-stone-600 hover:text-stone-300 transition-colors p-1"
         >
           <X className="w-5 h-5" />
         </button>
 
-        {/* Icon */}
-        <div className="w-14 h-14 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center mb-5">
-          <Sparkles className="w-7 h-7 text-amber-400" />
+        {/* Discount badge */}
+        <div className="inline-flex items-center gap-1.5 bg-amber-500 text-stone-950 text-[11px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider mb-4">
+          <Sparkles className="w-3 h-3" /> Limited offer — 25% off
         </div>
 
-        <h2 className="text-2xl text-stone-100 mb-2" style={{ fontFamily: 'var(--font-serif)' }}>
-          Wait — see it work first.
+        <h2 className="text-3xl text-stone-100 mb-2 leading-tight font-bold">
+          Wait — your resume for{' '}
+          <span style={{ background: 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>$7.99</span>
         </h2>
-        <p className="text-stone-400 text-sm leading-relaxed mb-6">
-          Paste any resume bullet below and watch the AI rewrite it in 5 seconds. No account, no card, no commitment.
+        <p className="text-stone-400 text-sm leading-relaxed mb-5">
+          One polished, AI-rewritten resume — yours forever for less than a coffee.
+          <span className="block mt-1 text-stone-500"><s>$9.99</s> · No subscription · 7-day money back.</span>
         </p>
 
-        {/* Mini inline demo */}
-        <MiniDemo onClose={() => setShow(false)} />
+        {/* Value bullets */}
+        <ul className="space-y-1.5 mb-5">
+          {[
+            'Instant PDF — pay once, download forever',
+            'AI rewrites every bullet into achievements',
+            'All 6 professional templates included',
+            'No subscription, no recurring charges',
+          ].map(b => (
+            <li key={b} className="flex items-center gap-2 text-sm text-stone-300">
+              <CheckCircle className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" /> {b}
+            </li>
+          ))}
+        </ul>
 
-        <div className="mt-5 pt-5 border-t border-stone-800 flex items-center justify-between">
-          <button onClick={() => setShow(false)} className="text-stone-600 hover:text-stone-400 text-sm transition-colors">
-            No thanks
-          </button>
-          <Link
-            href="/start"
-            onClick={() => setShow(false)}
-            className="inline-flex items-center gap-2 text-amber-500 hover:text-amber-400 text-sm font-semibold transition-colors"
+        {/* Email capture + buy */}
+        <form onSubmit={claim} className="space-y-2.5">
+          <div className="relative">
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500/70 pointer-events-none" />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoFocus
+              placeholder="Enter your email to claim"
+              className="w-full h-11 pl-10 pr-3 bg-stone-950/80 border border-stone-700 rounded-lg text-stone-100 placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 text-sm transition-colors"
+            />
+          </div>
+          {err && <p className="text-red-400 text-xs">{err}</p>}
+          <button
+            type="submit"
+            disabled={loading || !email.trim()}
+            className="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm py-3.5 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 shadow-[0_0_30px_-5px_rgba(245,158,11,0.5)]"
           >
-            Build my resume free <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      </div>
-    </div>
-  )
-}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+            {loading ? 'Redirecting…' : 'Claim my $7.99 resume'}
+            {!loading && <ArrowRight className="w-4 h-4" />}
+          </button>
+        </form>
 
-function MiniDemo({ onClose }: { onClose: () => void }) {
-  const [bullet, setBullet] = useState('Managed a team and worked on improving the product')
-  const [result, setResult] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  async function handleRewrite() {
-    if (!bullet.trim() || loading) return
-    setLoading(true)
-    try {
-      const res = await fetch('/api/resume/enhance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bullet }),
-      })
-      const data = await res.json()
-      if (data.enhanced) setResult(data.enhanced)
-    } catch {}
-    setLoading(false)
-  }
-
-  if (result) {
-    return (
-      <div className="space-y-3">
-        <div className="bg-stone-800 rounded-xl p-3">
-          <div className="text-[10px] text-stone-600 font-bold uppercase tracking-widest mb-1">Before</div>
-          <p className="text-stone-500 text-xs leading-relaxed">{bullet}</p>
+        <div className="flex items-center justify-center gap-1.5 mt-4 text-stone-600 text-[10px]">
+          <Clock className="w-3 h-3" /> This offer disappears when you close this window
         </div>
-        <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
-          <div className="text-[10px] text-amber-500 font-bold uppercase tracking-widest mb-1">After ✦</div>
-          <p className="text-stone-200 text-xs leading-relaxed font-medium">{result}</p>
-        </div>
-        <Link
-          href="/start"
-          onClick={onClose}
-          className="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm py-3 rounded-xl transition-colors"
+
+        <button
+          onClick={() => setShow(false)}
+          className="block w-full text-center text-stone-600 hover:text-stone-400 text-xs mt-3 transition-colors"
         >
-          Do this for my whole resume <ArrowRight className="w-4 h-4" />
-        </Link>
+          No thanks, I&apos;ll pay full price later
+        </button>
       </div>
-    )
-  }
-
-  return (
-    <div className="space-y-3">
-      <textarea
-        value={bullet}
-        onChange={(e) => setBullet(e.target.value)}
-        rows={2}
-        className="w-full bg-stone-800 border border-stone-700 rounded-xl px-4 py-3 text-stone-100 placeholder:text-stone-600 text-xs leading-relaxed focus:outline-none focus:border-amber-500/50 transition-colors resize-none"
-      />
-      <button
-        onClick={handleRewrite}
-        disabled={loading || !bullet.trim()}
-        className="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm py-3 rounded-xl transition-colors disabled:opacity-40"
-      >
-        {loading ? (
-          <><span className="w-4 h-4 border-2 border-stone-950/30 border-t-stone-950 rounded-full animate-spin" /> Rewriting…</>
-        ) : (
-          <><Sparkles className="w-4 h-4" /> Rewrite with AI</>
-        )}
-      </button>
     </div>
   )
 }
