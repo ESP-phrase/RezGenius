@@ -1,6 +1,7 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { rdtCapiTrack } from '@/lib/rdt-capi'
+import { ttqCapiTrack } from '@/lib/ttq-capi'
 
 let _stripe: Stripe | null = null
 function stripe() {
@@ -36,15 +37,13 @@ export async function POST(req: NextRequest) {
 
       const session = await stripe().checkout.sessions.create(params)
 
-      // Server-side AddToCart event for Reddit CAPI (dedupes with client pixel via session.id)
-      await rdtCapiTrack({
-        eventName: 'AddToCart',
-        conversionId: session.id,
-        value: trial ? 1 : 29,
-        currency: 'USD',
-        ipAddress,
-        userAgent,
-      })
+      // Server-side AddToCart + InitiateCheckout via Reddit + TikTok APIs (dedup with client pixels)
+      const value = trial ? 1 : 29
+      await Promise.allSettled([
+        rdtCapiTrack({ eventName: 'AddToCart', conversionId: session.id, value, currency: 'USD', ipAddress, userAgent }),
+        ttqCapiTrack({ eventName: 'AddToCart', eventId: session.id, value, currency: 'USD', ipAddress, userAgent, contentId: trial ? 'pro_trial' : 'pro_monthly', contentName: trial ? 'ResumeGenius Pro Trial' : 'ResumeGenius Pro Monthly' }),
+        ttqCapiTrack({ eventName: 'InitiateCheckout', eventId: session.id + '_ic', value, currency: 'USD', ipAddress, userAgent, contentId: trial ? 'pro_trial' : 'pro_monthly' }),
+      ])
 
       return NextResponse.json({ url: session.url })
     }
@@ -67,14 +66,11 @@ export async function POST(req: NextRequest) {
       cancel_url: cancelUrl,
     })
 
-    await rdtCapiTrack({
-      eventName: 'AddToCart',
-      conversionId: session.id,
-      value: 149,
-      currency: 'USD',
-      ipAddress,
-      userAgent,
-    })
+    await Promise.allSettled([
+      rdtCapiTrack({ eventName: 'AddToCart', conversionId: session.id, value: 149, currency: 'USD', ipAddress, userAgent }),
+      ttqCapiTrack({ eventName: 'AddToCart', eventId: session.id, value: 149, currency: 'USD', ipAddress, userAgent, contentId: 'lifetime', contentName: 'ResumeGenius Lifetime' }),
+      ttqCapiTrack({ eventName: 'InitiateCheckout', eventId: session.id + '_ic', value: 149, currency: 'USD', ipAddress, userAgent, contentId: 'lifetime' }),
+    ])
 
     return NextResponse.json({ url: session.url })
   } catch (err) {

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
 import TemplateThumbnail from '@/components/resume/TemplateThumbnail'
 import type { TemplateId } from '@/types/resume'
+import { ttqIdentify, ttqTrack } from '@/lib/ttq'
 
 type ResumeCard = {
   id: string
@@ -143,6 +144,22 @@ export default function DashboardShell({ user, initialResumes }: Props) {
       sessionStorage.removeItem('resumeStartType')
     }
   }, [])
+
+  // Identify the user to TikTok pixel for higher EMQ scoring + fire CompleteRegistration
+  // on first dashboard visit after sign-in
+  useEffect(() => {
+    if (!user.email) return
+    ttqIdentify({ email: user.email, externalId: user.id })
+
+    const firedKey = `tt_complete_reg_${user.id}`
+    if (typeof window !== 'undefined' && !sessionStorage.getItem(firedKey)) {
+      ttqTrack('CompleteRegistration', {
+        contents: [{ content_id: 'user_signup', content_type: 'product', content_name: 'ResumeGenius Account' }],
+        currency: 'USD',
+      })
+      sessionStorage.setItem(firedKey, '1')
+    }
+  }, [user.email, user.id])
 
   async function handleGenerate() {
     if (!prompt.trim()) return

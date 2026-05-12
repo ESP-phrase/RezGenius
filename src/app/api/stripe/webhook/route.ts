@@ -1,6 +1,7 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { rdtCapiTrack } from '@/lib/rdt-capi'
+import { ttqCapiTrack } from '@/lib/ttq-capi'
 
 let _stripe: Stripe | null = null
 function stripe() {
@@ -24,15 +25,34 @@ export async function POST(req: NextRequest) {
     const session = event.data.object as Stripe.Checkout.Session
     console.log('Payment completed:', session.id, 'Resume:', session.metadata?.resumeId)
 
-    // Reddit Conversions API — server-side dedup with client-side pixel
+    // Server-side conversion APIs — dedup with client-side pixels via session.id
     const total = (session.amount_total ?? 0) / 100
-    await rdtCapiTrack({
-      eventName: 'Purchase',
-      conversionId: session.id, // matches client-side pixel conversionId
-      email: session.customer_details?.email ?? undefined,
-      value: total,
-      currency: (session.currency ?? 'usd').toUpperCase(),
-    })
+    const email = session.customer_details?.email ?? undefined
+    const currency = (session.currency ?? 'usd').toUpperCase()
+
+    await Promise.allSettled([
+      rdtCapiTrack({
+        eventName: 'Purchase',
+        conversionId: session.id,
+        email,
+        value: total,
+        currency,
+      }),
+      ttqCapiTrack({
+        eventName: 'CompletePayment',
+        eventId: session.id,
+        email,
+        value: total,
+        currency,
+      }),
+      ttqCapiTrack({
+        eventName: 'PlaceAnOrder',
+        eventId: session.id + '_order',
+        email,
+        value: total,
+        currency,
+      }),
+    ])
   }
 
   return NextResponse.json({ received: true })
