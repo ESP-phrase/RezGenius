@@ -6,6 +6,7 @@ import StickyBar from './StickyBar'
 import HomePageView from './HomePageView'
 import { BuildResumeButton, SeeHowItWorksButton, NavBuildButton, FinalCTAButton, SparkleCTAButton } from './HomeCTA'
 import PopupAB from './PopupAB'
+import HeroEmailCapture from './HeroEmailCapture'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -194,24 +195,14 @@ export default function Home() {
                 You&apos;re more impressive than your current resume shows. ResumeGenius rewrites your experience into powerful, impactful language that gets responses — polished PDF in minutes.
               </p>
 
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row items-center md:items-center md:justify-start gap-3 sm:gap-3 mb-7">
-                <BuildResumeButton size="lg" />
-                <SeeHowItWorksButton />
-              </div>
+              {/* Email capture as primary CTA */}
+              <HeroEmailCapture />
 
-              {/* Trust indicators row */}
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-6 gap-y-2 mb-10 text-sm">
-                {[
-                  { label: 'Free to build' },
-                  { label: 'Pay to download' },
-                  { label: 'Takes 5 minutes' },
-                ].map(item => (
-                  <div key={item.label} className="flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-amber-500" />
-                    <span className="text-stone-400">{item.label}</span>
-                  </div>
-                ))}
+              {/* Secondary: see how it works (text link only) */}
+              <div className="text-center md:text-left mb-10">
+                <a href="#how-it-works" className="text-stone-500 hover:text-amber-400 text-sm transition-colors inline-flex items-center gap-1.5">
+                  ▶ See how it works first
+                </a>
               </div>
 
               {/* Stats grid */}

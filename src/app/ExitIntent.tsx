@@ -33,9 +33,9 @@ export default function ExitIntent() {
     }
     const mouseDelay = setTimeout(() => {
       document.addEventListener('mouseleave', handleMouseLeave)
-    }, 5000)
-    // Fallback: if user hasn't moved cursor out after 20s, still show
-    const fallbackDelay = setTimeout(fire, 20000)
+    }, 3000)
+    // Fallback: if user hasn't moved cursor out after 10s, still show
+    const fallbackDelay = setTimeout(fire, 10000)
     return () => {
       clearTimeout(mouseDelay)
       clearTimeout(fallbackDelay)

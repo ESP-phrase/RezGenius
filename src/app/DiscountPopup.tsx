@@ -27,7 +27,7 @@ export default function DiscountPopup() {
       setStage('code')
     }
 
-    // Show after 12s
+    // Show after 5s (was 12s — faster capture for TikTok users)
     const t = setTimeout(() => {
       setOpen(true)
       try {
@@ -36,7 +36,7 @@ export default function DiscountPopup() {
           currency: 'USD',
         })
       } catch {}
-    }, 12000)
+    }, 5000)
     return () => clearTimeout(t)
   }, [])
 

@@ -57,6 +57,16 @@ export default function ResumeBuilder() {
   const [savedAt, setSavedAt] = useState<string | null>(null)
   const [loading, setLoading] = useState(!!resumeId)
 
+  // Prefill email if user submitted it on the hero email-capture form
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const captured = sessionStorage.getItem('captured_email')
+    if (captured) {
+      setResume(r => r.personalInfo.email ? r : { ...r, personalInfo: { ...r.personalInfo, email: captured } })
+      sessionStorage.removeItem('captured_email')
+    }
+  }, [])
+
   useEffect(() => {
     if (!resumeId) return
     fetch(`/api/resumes/${resumeId}`)
