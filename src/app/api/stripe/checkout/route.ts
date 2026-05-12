@@ -19,26 +19,36 @@ export async function POST(req: NextRequest) {
     const cancelUrl = resumeId ? `${appUrl}/builder?id=${resumeId}` : `${appUrl}/builder`
     const successUrl = `${appUrl}/download?session_id={CHECKOUT_SESSION_ID}&resume_id=${resumeId}`
 
+    // Shared base — collect customer details for high EMQ on conversion events.
+    const commonParams = {
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      customer_creation: 'always' as const,
+      phone_number_collection: { enabled: true },
+      consent_collection: { terms_of_service: 'required' as const },
+      allow_promotion_codes: true,
+    }
+
     if (mode === 'subscription') {
       const params: Stripe.Checkout.SessionCreateParams = {
+        ...commonParams,
         mode: 'subscription',
         line_items: [{ price: process.env.STRIPE_PRICE_ID_SUBSCRIPTION, quantity: 1 }],
         metadata: { resumeId: resumeId ?? '', trial: trial ? '1' : '0' },
-        success_url: successUrl,
-        cancel_url: cancelUrl,
       }
 
-      // $1 trial: apply $28 discount on first month so user pays $1, then full $29/mo.
-      // Coupon must be created in Stripe dashboard with id "FIRST_MONTH_DOLLAR"
-      // (amount_off: 2800, currency: usd, duration: once)
       if (trial) {
-        params.discounts = [{ coupon: process.env.STRIPE_TRIAL_COUPON_ID || 'FIRST_MONTH_DOLLAR' }]
+        // 7-day free trial — Stripe charges $0 today, full $29 after trial.
+        // Beats the coupon approach: no Stripe coupon required.
+        params.subscription_data = {
+          trial_period_days: 7,
+          metadata: { plan: 'pro_trial' },
+        }
       }
 
       const session = await stripe().checkout.sessions.create(params)
 
-      // Server-side AddToCart + InitiateCheckout via Reddit + TikTok APIs (dedup with client pixels)
-      const value = trial ? 1 : 29
+      const value = trial ? 0 : 29
       await Promise.allSettled([
         rdtCapiTrack({ eventName: 'AddToCart', conversionId: session.id, value, currency: 'USD', ipAddress, userAgent }),
         ttqCapiTrack({ eventName: 'AddToCart', eventId: session.id, value, currency: 'USD', ipAddress, userAgent, contentId: trial ? 'pro_trial' : 'pro_monthly', contentName: trial ? 'ResumeGenius Pro Trial' : 'ResumeGenius Pro Monthly' }),
@@ -48,24 +58,49 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ url: session.url })
     }
 
-    // Lifetime / pay-per-resume
+    // Lifetime — free 7-day trial → $149 charged after trial via a subscription
+    // that we cancel right after the first invoice succeeds (in webhook).
+    if (mode === 'lifetime-trial') {
+      if (!process.env.STRIPE_PRICE_ID_LIFETIME_TRIAL) {
+        return NextResponse.json({
+          error: 'STRIPE_PRICE_ID_LIFETIME_TRIAL not set. Create a $149 yearly subscription price in Stripe and add the price_... ID to Vercel env vars.',
+        }, { status: 500 })
+      }
+      const session = await stripe().checkout.sessions.create({
+        ...commonParams,
+        mode: 'subscription',
+        line_items: [{ price: process.env.STRIPE_PRICE_ID_LIFETIME_TRIAL, quantity: 1 }],
+        subscription_data: {
+          trial_period_days: 7,
+          metadata: { plan: 'lifetime_trial', cancel_after_first_charge: '1' },
+        },
+        metadata: { resumeId: resumeId ?? '', plan: 'lifetime_trial' },
+      })
+
+      await Promise.allSettled([
+        rdtCapiTrack({ eventName: 'AddToCart', conversionId: session.id, value: 0, currency: 'USD', ipAddress, userAgent }),
+        ttqCapiTrack({ eventName: 'AddToCart', eventId: session.id, value: 0, currency: 'USD', ipAddress, userAgent, contentId: 'lifetime_trial', contentName: 'ResumeGenius Lifetime (7-day free trial)' }),
+        ttqCapiTrack({ eventName: 'InitiateCheckout', eventId: session.id + '_ic', value: 0, currency: 'USD', ipAddress, userAgent, contentId: 'lifetime_trial' }),
+      ])
+
+      return NextResponse.json({ url: session.url })
+    }
+
+    // Lifetime instant pay (one-time $149, no trial)
     const session = await stripe().checkout.sessions.create({
+      ...commonParams,
       mode: 'payment',
       line_items: [
         {
           price_data: {
             currency: 'usd',
-            // Hardcoded — env-var fallback caused $3.24 charge when stale value was set.
-            // Update this and STRIPE_PRICE_ID_SUBSCRIPTION if pricing changes.
             unit_amount: 14900, // $149.00 Lifetime
             product_data: { name: 'ResumeGenius Lifetime', description: 'Lifetime access · pay once' },
           },
           quantity: 1,
         },
       ],
-      metadata: { resumeId: resumeId ?? '' },
-      success_url: successUrl,
-      cancel_url: cancelUrl,
+      metadata: { resumeId: resumeId ?? '', plan: 'lifetime' },
     })
 
     await Promise.allSettled([

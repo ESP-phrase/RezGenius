@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Loader2, Mail, ArrowRight, CheckCircle, AlertCircle, Link as LinkIcon, Shield, Clock } from 'lucide-react'
 import { Logo } from '@/components/Logo'
+import { ttqIdentify, ttqTrack } from '@/lib/ttq'
 
 function Sparkle({ className = '' }: { className?: string }) {
   return (
@@ -48,6 +49,14 @@ function SignInInner() {
     if (!email) return
     setLoading(true)
     setError('')
+    // Identify user to TikTok pixel (boosts EMQ across all future events on this device)
+    try {
+      await ttqIdentify({ email })
+      ttqTrack('Lead', {
+        contents: [{ content_id: 'magic_link_signin', content_type: 'product', content_name: 'Sign-in Lead' }],
+        currency: 'USD',
+      })
+    } catch {}
     const res = await fetch('/api/auth/magic-link', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
