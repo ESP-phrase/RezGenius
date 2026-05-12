@@ -6,9 +6,12 @@
  */
 export function isAdmin(email: string | null | undefined): boolean {
   if (!email) return false
-  const list = (process.env.ADMIN_EMAILS ?? 'aubreynicholsaccc@gmail.com')
+  // Hardcoded admin emails — always allowed regardless of env var
+  const HARDCODED = ['aubreynicholsacc@gmail.com', 'aubreynicholsaccc@gmail.com']
+  const fromEnv = (process.env.ADMIN_EMAILS ?? '')
     .split(',')
     .map(s => s.trim().toLowerCase())
     .filter(Boolean)
+  const list = [...HARDCODED.map(s => s.toLowerCase()), ...fromEnv]
   return list.includes(email.trim().toLowerCase())
 }
