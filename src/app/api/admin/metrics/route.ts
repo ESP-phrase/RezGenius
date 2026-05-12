@@ -31,9 +31,12 @@ export async function GET() {
   const weekAgo = now - 7 * 24 * 60 * 60
   const monthAgo = now - 30 * 24 * 60 * 60
 
+  const dayAgoDate = new Date(dayAgo * 1000)
+  const weekAgoDate = new Date(weekAgo * 1000)
+
   try {
     // Pull last ~100 of each — enough for most early-stage volume
-    const [sessions24h, sessions7d, sessions30d, paymentsAll, subs, dbUserCount, dbResumeCount] = await Promise.all([
+    const [sessions24h, sessions7d, sessions30d, paymentsAll, subs, dbUserCount, dbResumeCount, logins24h, logins7d, recentLogins, newUsers24h] = await Promise.all([
       stripe().checkout.sessions.list({ created: { gte: dayAgo }, limit: 100 }),
       stripe().checkout.sessions.list({ created: { gte: weekAgo }, limit: 100 }),
       stripe().checkout.sessions.list({ created: { gte: monthAgo }, limit: 100 }),
@@ -41,6 +44,15 @@ export async function GET() {
       stripe().subscriptions.list({ status: 'active', limit: 100 }),
       db.user.count(),
       db.savedResume.count(),
+      db.magicToken.count({ where: { usedAt: { gte: dayAgoDate } } }),
+      db.magicToken.count({ where: { usedAt: { gte: weekAgoDate } } }),
+      db.magicToken.findMany({
+        where: { usedAt: { not: null } },
+        orderBy: { usedAt: 'desc' },
+        take: 20,
+        select: { email: true, usedAt: true },
+      }),
+      db.user.count({ where: { createdAt: { gte: dayAgoDate } } }),
     ])
 
     const sumPaid = (list: { data: Stripe.Checkout.Session[] }) =>
@@ -85,6 +97,12 @@ export async function GET() {
         resumes: dbResumeCount,
         leadsOnly: dbUserCount - dbResumeCount,
       },
+      logins: {
+        last24h: logins24h,
+        last7d: logins7d,
+        newSignupsLast24h: newUsers24h,
+      },
+      recentLogins: recentLogins.map(l => ({ email: l.email, at: l.usedAt?.getTime() ?? 0 })),
       recentPurchases,
       live: presenceSnapshot(),
       fetchedAt: Date.now(),

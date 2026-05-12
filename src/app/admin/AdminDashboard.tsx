@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
-import { ShoppingCart, DollarSign, Users, FileText, RefreshCw, TrendingUp, Loader2, LogOut, Crown, Activity, CreditCard } from 'lucide-react'
+import { ShoppingCart, DollarSign, Users, FileText, RefreshCw, TrendingUp, Loader2, LogOut, Crown, Activity, CreditCard, LogIn, UserPlus } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 
 type Metrics = {
@@ -14,6 +14,8 @@ type Metrics = {
   totals: { users: number; resumes: number; leadsOnly: number }
   recentPurchases: { id: string; amount: number; currency: string; created: number; email: string | null; description: string | null }[]
   live: { total: number; checkout: number; pricing: number; builder: number; byPath: Record<string, number> }
+  logins: { last24h: number; last7d: number; newSignupsLast24h: number }
+  recentLogins: { email: string; at: number }[]
   fetchedAt: number
 }
 
@@ -38,8 +40,8 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
 
   useEffect(() => {
     load()
-    // Refresh more often so live counts feel real-time
-    const t = setInterval(load, 10_000)
+    // Refresh every 5s so live counters feel real-time
+    const t = setInterval(load, 5_000)
     return () => clearInterval(t)
   }, [load])
 
@@ -83,7 +85,7 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
           <span className="text-stone-600 text-xs">{adminEmail}</span>
         </div>
         <p className="text-stone-500 text-sm mb-6 sm:mb-8">
-          Live Stripe data · Auto-refreshes every 30s {data ? `· Last fetched ${new Date(data.fetchedAt).toLocaleTimeString()}` : ''}
+          Live Stripe + DB data · Auto-refreshes every 5s {data ? `· Last fetched ${new Date(data.fetchedAt).toLocaleTimeString()}` : ''}
         </p>
 
         {err && (
@@ -119,11 +121,18 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
             </div>
 
             {/* Headline stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
               <Stat icon={ShoppingCart} label="ATC (24h)" value={`${data.atc.last24h}`} sub={`${data.atc.last7d} this week`} />
               <Stat icon={TrendingUp} label="Purchases (24h)" value={`${data.purchases.last24h}`} sub={`${data.purchases.last7d} this week`} accent />
               <Stat icon={DollarSign} label="Revenue (24h)" value={`$${data.revenue.last24h.toFixed(2)}`} sub={`$${data.revenue.last7d.toFixed(2)} this week`} accent />
               <Stat icon={Users} label="Active subs" value={`${data.activeSubscriptions}`} sub={`${data.totals.users} total users`} />
+            </div>
+
+            {/* Logins + signups row */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
+              <Stat icon={LogIn} label="Logins (24h)" value={`${data.logins.last24h}`} sub={`${data.logins.last7d} this week`} />
+              <Stat icon={UserPlus} label="New signups (24h)" value={`${data.logins.newSignupsLast24h}`} sub={`${data.totals.users} total`} />
+              <Stat icon={FileText} label="Resumes built" value={`${data.totals.resumes}`} sub={`${data.totals.leadsOnly} email-only leads`} />
             </div>
 
             {/* Funnel */}
@@ -141,11 +150,25 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
               </div>
             </div>
 
-            {/* Totals */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
-              <SmallStat icon={Users} label="Total signups" value={data.totals.users} />
-              <SmallStat icon={FileText} label="Resumes built" value={data.totals.resumes} />
-              <SmallStat icon={Users} label="Email-only leads" value={data.totals.leadsOnly} />
+            {/* Recent logins */}
+            <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5 sm:p-6 mb-6 sm:mb-8">
+              <h2 className="font-bold text-base mb-4 flex items-center gap-2">
+                <LogIn className="w-4 h-4 text-amber-400" /> Recent logins
+              </h2>
+              {data.recentLogins.length === 0 ? (
+                <p className="text-stone-500 text-sm py-6 text-center">No logins yet.</p>
+              ) : (
+                <div className="divide-y divide-stone-800/60">
+                  {data.recentLogins.map((l, i) => (
+                    <div key={`${l.email}-${l.at}-${i}`} className="flex items-center justify-between py-2.5 gap-3">
+                      <div className="min-w-0">
+                        <div className="text-stone-100 text-sm truncate">{l.email}</div>
+                      </div>
+                      <div className="text-stone-500 text-xs whitespace-nowrap">{relativeTime(l.at)}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Recent purchases */}
@@ -236,4 +259,18 @@ function FunnelRow({ label, value, max, accent }: { label: string; value: number
 function safeRate(n: number, d: number): number {
   if (!d) return 0
   return (n / d) * 100
+}
+
+function relativeTime(ts: number): string {
+  if (!ts) return ''
+  const diff = Date.now() - ts
+  const s = Math.floor(diff / 1000)
+  if (s < 60) return `${s}s ago`
+  const m = Math.floor(s / 60)
+  if (m < 60) return `${m}m ago`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `${h}h ago`
+  const d = Math.floor(h / 24)
+  if (d < 7) return `${d}d ago`
+  return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
