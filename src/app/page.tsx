@@ -173,7 +173,7 @@ export default function Home() {
               {/* Pill */}
               <div className="inline-flex items-center gap-2 border border-stone-700/80 bg-stone-900/40 text-stone-300 text-[11px] sm:text-xs font-medium px-3.5 py-1.5 rounded-full mb-6 sm:mb-8">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                Used by professionals at Google, Stripe &amp; more
+                Trusted by 10,000+ job seekers
               </div>
 
               {/* Heading — sans-serif bold like reference */}
@@ -233,7 +233,7 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-center gap-3 mb-8">
               <div className="h-px w-10 bg-stone-800" />
-              <span className="text-stone-600 text-[10px] font-semibold uppercase tracking-[0.25em]">Trusted by professionals at</span>
+              <span className="text-stone-600 text-[10px] font-semibold uppercase tracking-[0.25em]">Job seekers hired at</span>
               <div className="h-px w-10 bg-stone-800" />
             </div>
             <div className="flex flex-wrap items-center justify-center gap-x-10 sm:gap-x-14 gap-y-5 opacity-80">

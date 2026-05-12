@@ -6,6 +6,8 @@ export interface PersonalInfo {
   linkedin?: string
   website?: string
   summary?: string
+  /** Data URL (base64) of the user's profile photo. Stored client-side. */
+  photoUrl?: string
 }
 
 export interface Experience {

@@ -14,6 +14,7 @@ import { TEMPLATE_DEFAULTS } from '@/components/pdf/ResumeDocument'
 import { Sparkles, Plus, Trash2, ChevronRight, ChevronLeft, Download, Loader2, CheckCircle, User, Briefcase, GraduationCap, Wrench, CreditCard, LayoutTemplate, Save, ArrowLeft } from 'lucide-react'
 import ResumePreview from './ResumePreview'
 import TemplateThumbnail from './TemplateThumbnail'
+import PhotoUploader from './PhotoUploader'
 
 const EMPTY_RESUME: Resume = {
   personalInfo: { name: '', email: '', phone: '', location: '', linkedin: '', website: '', summary: '' },
@@ -353,6 +354,12 @@ export default function ResumeBuilder() {
             {/* Personal */}
             {currentStep.key === 'personal' && (
               <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <PhotoUploader
+                    photoUrl={resume.personalInfo.photoUrl}
+                    onChange={(url) => updatePersonal('photoUrl', url ?? '')}
+                  />
+                </div>
                 <Field label="Full Name" span2><Input className={inputCls} value={resume.personalInfo.name} onChange={e => updatePersonal('name', e.target.value)} placeholder="Alex Johnson" /></Field>
                 <Field label="Email"><Input className={inputCls} type="email" value={resume.personalInfo.email} onChange={e => updatePersonal('email', e.target.value)} placeholder="alex@email.com" /></Field>
                 <Field label="Phone"><Input className={inputCls} value={resume.personalInfo.phone} onChange={e => updatePersonal('phone', e.target.value)} placeholder="(555) 000-0000" /></Field>
