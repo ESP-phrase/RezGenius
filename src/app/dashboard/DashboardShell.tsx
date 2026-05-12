@@ -269,76 +269,69 @@ export default function DashboardShell({ user, initialResumes }: Props) {
         </div>
       </header>
 
-      <main className="flex-1 px-4 sm:px-6 py-6 sm:py-10 max-w-6xl mx-auto w-full">
-        {/* Welcome banner — premium gradient with ATS score graphic */}
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-amber-950/40 via-stone-900 to-stone-950 border border-amber-500/20 mb-8 sm:mb-10">
+      <main className="flex-1 px-4 sm:px-6 py-4 sm:py-5 max-w-6xl mx-auto w-full">
+        {/* Welcome banner — compact */}
+        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-amber-950/40 via-stone-900 to-stone-950 border border-amber-500/20 mb-5">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(245,158,11,0.18),transparent_60%)] pointer-events-none" />
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.08),transparent_70%)] pointer-events-none" />
 
-          <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 p-6 sm:p-10">
-            {/* Left: Greeting + features */}
+          <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 p-4 sm:p-5">
             <div>
-              <p className="text-amber-400 text-sm font-semibold mb-2">{greeting},</p>
-              <h1 className="text-3xl sm:text-5xl text-stone-100 capitalize mb-3 leading-tight font-bold tracking-tight">
+              <p className="text-amber-400 text-xs font-semibold mb-0.5">{greeting},</p>
+              <h1 className="text-2xl sm:text-3xl text-stone-100 capitalize mb-1 leading-tight font-bold tracking-tight">
                 {firstName}
               </h1>
-              <p className="text-stone-200 text-base sm:text-lg font-medium mb-1">Ready to land your next opportunity?</p>
-              <p className="text-stone-500 text-sm mb-6 sm:mb-7">Create a standout resume in minutes with AI-powered suggestions.</p>
+              <p className="text-stone-300 text-sm font-medium mb-0.5">Ready to land your next opportunity?</p>
+              <p className="text-stone-500 text-xs mb-3">Create a standout resume in minutes with AI-powered suggestions.</p>
 
-              {/* Feature pills */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
                 <FeaturePill icon={Brain} title="AI-Powered" sub="Smart suggestions" />
-                <FeaturePill icon={Shield} title="ATS-Optimized" sub="Pass applicant tracking" />
-                <FeaturePill icon={LayoutTemplate} title="Professional Templates" sub="Designed to impress" />
-                <FeaturePill icon={Lightbulb} title="Expert Tips" sub="Guidance at every step" />
+                <FeaturePill icon={Shield} title="ATS-Optimized" sub="Pass tracking" />
+                <FeaturePill icon={LayoutTemplate} title="Pro Templates" sub="Designed to impress" />
+                <FeaturePill icon={Lightbulb} title="Expert Tips" sub="Step by step" />
               </div>
 
               <Button
                 onClick={handleNew}
                 disabled={creating}
-                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold h-11 px-5 gap-2 shadow-[0_0_30px_-5px_rgba(245,158,11,0.5)]"
+                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold h-9 px-4 gap-1.5 text-sm shadow-[0_0_24px_-5px_rgba(245,158,11,0.5)]"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-3.5 h-3.5" />
                 {creating ? 'Creating…' : 'New Resume'}
               </Button>
             </div>
 
-            {/* Right: Resume stack + ATS score */}
-            <div className="hidden md:flex items-center justify-center relative">
-              <div className="relative w-[260px] h-[280px]">
-                {/* Stacked papers */}
-                <div className="absolute top-2 left-4 w-[200px] h-[260px] bg-stone-200 rounded-md shadow-lg rotate-[-4deg] opacity-30" />
-                <div className="absolute top-0 left-0 w-[200px] h-[260px] bg-stone-100 rounded-md shadow-2xl" />
-                {/* Resume preview content */}
-                <div className="absolute top-0 left-0 w-[200px] h-[260px] rounded-md overflow-hidden p-4 text-[7px] text-stone-700 font-serif">
-                  <div className="text-center mb-2 pb-1.5 border-b border-stone-300">
-                    <div className="font-bold text-[9px] tracking-widest">ALEX JOHNSON</div>
+            {/* Right: Resume stack + ATS score — compact */}
+            <div className="hidden md:flex items-center justify-center relative pr-6">
+              <div className="relative w-[170px] h-[200px]">
+                <div className="absolute top-2 left-3 w-[140px] h-[180px] bg-stone-200 rounded-md shadow-lg rotate-[-4deg] opacity-30" />
+                <div className="absolute top-0 left-0 w-[140px] h-[180px] bg-stone-100 rounded-md shadow-xl" />
+                <div className="absolute top-0 left-0 w-[140px] h-[180px] rounded-md overflow-hidden p-3 text-stone-700">
+                  <div className="text-center mb-1.5 pb-1 border-b border-stone-300">
+                    <div className="font-bold text-[8px] tracking-widest">ALEX JOHNSON</div>
                     <div className="text-[6px] text-stone-500 mt-0.5">Software Engineer</div>
                   </div>
-                  <div className="space-y-1.5">
-                    <div className="h-1 bg-stone-300 rounded-full w-3/4" />
-                    <div className="h-1 bg-stone-300 rounded-full" />
-                    <div className="h-1 bg-stone-300 rounded-full w-5/6" />
-                    <div className="h-px bg-stone-300 my-2" />
-                    <div className="h-1 bg-stone-300 rounded-full w-2/3" />
-                    <div className="h-1 bg-stone-300 rounded-full" />
-                    <div className="h-1 bg-stone-300 rounded-full w-4/5" />
+                  <div className="space-y-1">
+                    <div className="h-0.5 bg-stone-300 rounded-full w-3/4" />
+                    <div className="h-0.5 bg-stone-300 rounded-full" />
+                    <div className="h-0.5 bg-stone-300 rounded-full w-5/6" />
+                    <div className="h-px bg-stone-300 my-1.5" />
+                    <div className="h-0.5 bg-stone-300 rounded-full w-2/3" />
+                    <div className="h-0.5 bg-stone-300 rounded-full" />
+                    <div className="h-0.5 bg-stone-300 rounded-full w-4/5" />
                   </div>
                 </div>
-                {/* ATS Score gauge — top right overlay */}
-                <div className="absolute -top-2 -right-6">
-                  <div className="relative w-20 h-20">
+                {/* ATS Score gauge — smaller */}
+                <div className="absolute -top-1 -right-4">
+                  <div className="relative w-16 h-16">
                     <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
                       <circle cx="40" cy="40" r="34" fill="rgba(28,25,23,0.95)" stroke="rgba(55,55,55,0.5)" strokeWidth="4" />
-                      <circle
-                        cx="40" cy="40" r="34" fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round"
-                        strokeDasharray={`${(98 / 100) * 2 * Math.PI * 34} ${2 * Math.PI * 34}`}
-                      />
+                      <circle cx="40" cy="40" r="34" fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round"
+                        strokeDasharray={`${(98 / 100) * 2 * Math.PI * 34} ${2 * Math.PI * 34}`} />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-stone-100 text-xl font-bold leading-none">98</span>
-                      <span className="text-stone-500 text-[8px] uppercase tracking-wider mt-0.5">ATS Score</span>
-                      <span className="text-emerald-400 text-[8px] font-semibold mt-0.5">Excellent</span>
+                      <span className="text-stone-100 text-base font-bold leading-none">98</span>
+                      <span className="text-stone-500 text-[7px] uppercase tracking-wider mt-0.5">ATS</span>
+                      <span className="text-emerald-400 text-[7px] font-semibold">Excellent</span>
                     </div>
                   </div>
                 </div>
@@ -349,10 +342,10 @@ export default function DashboardShell({ user, initialResumes }: Props) {
 
         {/* Resume grid */}
         <div>
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-5 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-3 gap-2">
             <div>
-              <h2 className="text-stone-100 font-bold text-2xl sm:text-3xl" style={{ fontFamily: 'var(--font-serif)' }}>My Resumes</h2>
-              <p className="text-stone-500 text-sm mt-1">Manage and track your resumes all in one place.</p>
+              <h2 className="text-stone-100 font-bold text-xl sm:text-2xl" style={{ fontFamily: 'var(--font-serif)' }}>My Resumes</h2>
+              <p className="text-stone-500 text-xs mt-0.5">Manage and track your resumes all in one place.</p>
             </div>
             {resumes.length > 0 && (
               <div className="flex items-center gap-2">
@@ -398,7 +391,7 @@ export default function DashboardShell({ user, initialResumes }: Props) {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
               {resumes.map(resume => (
                 <div
                   key={resume.id}
@@ -456,32 +449,31 @@ export default function DashboardShell({ user, initialResumes }: Props) {
           )}
         </div>
 
-        {/* Unlock Premium Features banner — high-attention */}
-        <div className="relative mt-10 sm:mt-14 rounded-2xl overflow-hidden border-2 border-amber-500/40 bg-gradient-to-br from-amber-500/15 via-stone-900 to-stone-900 shadow-[0_0_60px_-15px_rgba(245,158,11,0.4)]">
-          {/* Animated shimmer overlay */}
+        {/* Unlock Premium Features banner — compact but eye-catching */}
+        <div className="relative mt-5 rounded-2xl overflow-hidden border-2 border-amber-500/40 bg-gradient-to-br from-amber-500/15 via-stone-900 to-stone-900 shadow-[0_0_40px_-15px_rgba(245,158,11,0.4)]">
           <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent,rgba(245,158,11,0.08),transparent)] bg-[length:200%_100%] animate-shimmer pointer-events-none" />
 
-          <div className="relative p-5 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-            <div className="flex items-center gap-4">
+          <div className="relative p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="absolute inset-0 rounded-2xl bg-amber-400 blur-md opacity-60 animate-pulse" />
-                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-500 to-amber-600 flex items-center justify-center shadow-[0_0_30px_-3px_rgba(245,158,11,0.8)]">
-                  <Crown className="w-7 h-7 text-stone-950" />
+                <div className="absolute inset-0 rounded-xl bg-amber-400 blur-md opacity-60 animate-pulse" />
+                <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-amber-300 via-amber-500 to-amber-600 flex items-center justify-center shadow-[0_0_24px_-3px_rgba(245,158,11,0.8)]">
+                  <Crown className="w-5 h-5 text-stone-950" />
                 </div>
               </div>
               <div>
-                <div className="inline-flex items-center gap-1.5 bg-amber-500 text-stone-950 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider mb-1.5">
+                <div className="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider mb-0.5">
                   <Sparkles className="w-2.5 h-2.5" /> Limited time
                 </div>
-                <h3 className="text-stone-100 font-bold text-lg sm:text-xl">Unlock Premium Features</h3>
-                <p className="text-stone-400 text-sm mt-1">Unlimited downloads · all 6 templates · priority support · 7-day free trial</p>
+                <h3 className="text-stone-100 font-bold text-base">Unlock Premium Features</h3>
+                <p className="text-stone-400 text-xs">Unlimited downloads · all templates · 7-day free trial</p>
               </div>
             </div>
             <Link href="/pricing" className="w-full md:w-auto">
-              <button className="group relative w-full md:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-black text-base h-12 sm:h-14 px-6 sm:px-8 rounded-xl transition-all shadow-[0_0_40px_-5px_rgba(245,158,11,0.7)] hover:shadow-[0_0_50px_-5px_rgba(245,158,11,0.9)] hover:scale-[1.03]">
-                <Crown className="w-5 h-5" />
+              <button className="group w-full md:w-auto inline-flex items-center justify-center gap-1.5 bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-black text-sm h-10 px-5 rounded-xl transition-all shadow-[0_0_30px_-5px_rgba(245,158,11,0.7)] hover:shadow-[0_0_40px_-5px_rgba(245,158,11,0.9)] hover:scale-[1.03]">
+                <Crown className="w-4 h-4" />
                 Upgrade Now
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
               </button>
             </Link>
           </div>
