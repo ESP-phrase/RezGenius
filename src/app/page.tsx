@@ -155,7 +155,6 @@ export default function Home() {
           {/* Center nav (desktop only) */}
           <div className="hidden lg:flex items-center gap-8">
             <a href="#features" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Features</a>
-            <a href="#examples" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Examples</a>
             <Link href="/pricing" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Pricing</Link>
             <button className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors inline-flex items-center gap-1">
               Resources <ChevronDown className="w-3.5 h-3.5" />

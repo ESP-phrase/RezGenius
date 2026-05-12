@@ -456,22 +456,35 @@ export default function DashboardShell({ user, initialResumes }: Props) {
           )}
         </div>
 
-        {/* Unlock Premium Features banner */}
-        <div className="mt-10 sm:mt-14 bg-gradient-to-r from-stone-900 via-amber-950/20 to-stone-900 border border-amber-500/20 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center flex-shrink-0 shadow-[0_0_24px_-5px_rgba(245,158,11,0.6)]">
-              <Crown className="w-5 h-5 text-stone-950" />
+        {/* Unlock Premium Features banner — high-attention */}
+        <div className="relative mt-10 sm:mt-14 rounded-2xl overflow-hidden border-2 border-amber-500/40 bg-gradient-to-br from-amber-500/15 via-stone-900 to-stone-900 shadow-[0_0_60px_-15px_rgba(245,158,11,0.4)]">
+          {/* Animated shimmer overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent,rgba(245,158,11,0.08),transparent)] bg-[length:200%_100%] animate-shimmer pointer-events-none" />
+
+          <div className="relative p-5 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-2xl bg-amber-400 blur-md opacity-60 animate-pulse" />
+                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-500 to-amber-600 flex items-center justify-center shadow-[0_0_30px_-3px_rgba(245,158,11,0.8)]">
+                  <Crown className="w-7 h-7 text-stone-950" />
+                </div>
+              </div>
+              <div>
+                <div className="inline-flex items-center gap-1.5 bg-amber-500 text-stone-950 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider mb-1.5">
+                  <Sparkles className="w-2.5 h-2.5" /> Limited time
+                </div>
+                <h3 className="text-stone-100 font-bold text-lg sm:text-xl">Unlock Premium Features</h3>
+                <p className="text-stone-400 text-sm mt-1">Unlimited downloads · all 6 templates · priority support · 7-day free trial</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-stone-100 font-bold text-base sm:text-lg">Unlock Premium Features</h3>
-              <p className="text-stone-500 text-xs sm:text-sm mt-0.5">Get access to premium templates, AI assistance, and advanced features.</p>
-            </div>
+            <Link href="/pricing" className="w-full md:w-auto">
+              <button className="group relative w-full md:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-black text-base h-12 sm:h-14 px-6 sm:px-8 rounded-xl transition-all shadow-[0_0_40px_-5px_rgba(245,158,11,0.7)] hover:shadow-[0_0_50px_-5px_rgba(245,158,11,0.9)] hover:scale-[1.03]">
+                <Crown className="w-5 h-5" />
+                Upgrade Now
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+              </button>
+            </Link>
           </div>
-          <Link href="/pricing">
-            <Button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold h-10 px-5 gap-2 whitespace-nowrap">
-              <Crown className="w-4 h-4" /> Upgrade Now
-            </Button>
-          </Link>
         </div>
       </main>
 
