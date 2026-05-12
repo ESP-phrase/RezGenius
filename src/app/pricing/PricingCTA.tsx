@@ -52,7 +52,7 @@ export function FreeCTA() {
         ttqTrack('ClickButton', { contents, currency: 'USD' })
         ttqTrack('CompleteRegistration', { contents, currency: 'USD' })
       }}
-      className="w-full border border-stone-700 hover:border-stone-500 hover:bg-stone-800 text-stone-200 font-semibold text-sm py-3 rounded-xl transition-colors text-center block"
+      className="w-full border border-stone-700 hover:border-stone-500 hover:bg-stone-800 text-stone-200 font-semibold text-xs py-2.5 rounded-lg transition-colors text-center block"
     >
       Get started free
     </Link>
@@ -65,7 +65,7 @@ export function OneResumeCTA() {
     <button
       onClick={async () => { setLoading(true); await goToCheckout({ mode: 'one-resume', value: 7.99 }) }}
       disabled={loading}
-      className="w-full bg-stone-800 hover:bg-stone-700 text-stone-100 font-semibold text-sm py-3 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 border border-stone-700"
+      className="w-full bg-stone-800 hover:bg-stone-700 text-stone-100 font-semibold text-xs py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 border border-stone-700"
     >
       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
       {loading ? 'Redirecting…' : 'Get one resume — $7.99'}
@@ -81,7 +81,7 @@ export function ProCTA() {
       <button
         onClick={async () => { setLoading('trial'); await goToCheckout({ mode: 'subscription', value: 0, trial: true }) }}
         disabled={loading !== null}
-        className="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm py-3 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 shadow-[0_0_30px_-8px_rgba(245,158,11,0.5)]"
+        className="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 shadow-[0_0_30px_-8px_rgba(245,158,11,0.5)]"
       >
         {loading === 'trial' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
         {loading === 'trial' ? 'Redirecting…' : 'Start 7-day free trial'}
@@ -106,7 +106,7 @@ export function LifetimeCTA() {
       <button
         onClick={async () => { setLoading('trial'); await goToCheckout({ mode: 'lifetime-trial', value: 0 }) }}
         disabled={loading !== null}
-        className="w-full border-2 border-amber-500/60 hover:border-amber-500 hover:bg-amber-500/10 text-stone-100 font-semibold text-sm py-3 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full border-2 border-amber-500/60 hover:border-amber-500 hover:bg-amber-500/10 text-stone-100 font-semibold text-xs py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
       >
         {loading === 'trial' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-amber-400" />}
         {loading === 'trial' ? 'Redirecting…' : 'Try free for 7 days — then $149'}

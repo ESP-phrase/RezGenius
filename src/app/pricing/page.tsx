@@ -75,50 +75,50 @@ export default function PricingPage() {
       </nav>
 
       <main className="flex-1">
-        {/* Header */}
-        <section className="pt-12 sm:pt-20 pb-10 px-4 sm:px-6 text-center">
+        {/* Header — compact for viewport fit */}
+        <section className="pt-5 sm:pt-6 pb-4 px-4 sm:px-6 text-center">
           {/* Trustpilot-style review row */}
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-stone-400 text-[11px] sm:text-xs mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-stone-400 text-[11px] sm:text-xs mb-3">
             <span>Our customers say</span>
             <span className="font-bold text-stone-200">Excellent</span>
             <div className="flex gap-0.5">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 bg-green-500 flex items-center justify-center rounded-sm">
-                  <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white fill-white" />
+                <div key={i} className="w-3.5 h-3.5 bg-green-500 flex items-center justify-center rounded-sm">
+                  <Star className="w-2.5 h-2.5 text-white fill-white" />
                 </div>
               ))}
             </div>
             <span className="text-stone-300"><strong className="text-stone-200">4.9</strong>/5 from <strong className="text-stone-200">2,100+ reviews</strong></span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl text-stone-100 mb-4 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
+          <h1 className="text-2xl sm:text-3xl text-stone-100 mb-1 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
             All Plans Include A <em style={{ fontStyle: 'italic', color: '#FBBF24' }}>100% Money-Back Guarantee</em>
           </h1>
-          <p className="text-stone-400 text-base sm:text-lg max-w-xl mx-auto">
+          <p className="text-stone-400 text-xs sm:text-sm max-w-xl mx-auto">
             Pays for itself with the time you'll save creating one resume.
           </p>
         </section>
 
-        {/* Plans — 3 columns */}
-        <section className="px-4 sm:px-6 pb-16">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* Plans — 3 columns, compact */}
+        <section className="px-4 sm:px-6 pb-8">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
 
             {/* Single Resume — $7.99 */}
-            <div className="bg-stone-900 border border-stone-800 rounded-2xl p-7 flex flex-col">
-              <div className="mb-5">
-                <div className="text-stone-300 font-bold text-base mb-1">$7.99 One Resume</div>
-                <p className="text-stone-500 text-sm">Just need one resume? Get a single polished PDF — no subscription.</p>
+            <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5 flex flex-col">
+              <div className="mb-3">
+                <div className="text-stone-300 font-bold text-sm mb-0.5">$7.99 One Resume</div>
+                <p className="text-stone-500 text-xs">Just one polished PDF — no subscription.</p>
               </div>
-              <div className="border-t border-stone-800 pt-6 mb-6 flex-1">
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-5xl font-black text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>$7.99</span>
-                  <span className="text-stone-500 text-sm line-through">$9.99</span>
-                  <span className="bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-0.5 rounded-full">20% off</span>
+              <div className="border-t border-stone-800 pt-3 mb-3 flex-1">
+                <div className="flex items-baseline gap-2 mb-3">
+                  <span className="text-3xl font-black text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>$7.99</span>
+                  <span className="text-stone-500 text-xs line-through">$9.99</span>
+                  <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">20% off</span>
                 </div>
-                <ul className="space-y-2.5 mt-6">
+                <ul className="space-y-1.5">
                   {ONE_RESUME.map((f) => (
-                    <li key={f} className="flex items-center gap-2.5 text-sm text-stone-400">
-                      <CheckCircle className="w-4 h-4 text-stone-600 flex-shrink-0" /> {f}
+                    <li key={f} className="flex items-center gap-2 text-xs text-stone-400">
+                      <CheckCircle className="w-3.5 h-3.5 text-stone-600 flex-shrink-0" /> {f}
                     </li>
                   ))}
                 </ul>
@@ -127,61 +127,59 @@ export default function PricingPage() {
             </div>
 
             {/* Pro — featured */}
-            <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-2 border-amber-500/60 rounded-2xl p-7 flex flex-col relative shadow-[0_0_60px_-15px_rgba(245,158,11,0.3)]">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                <span className="bg-amber-500 text-stone-950 text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider whitespace-nowrap">
+            <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-2 border-amber-500/60 rounded-2xl p-5 flex flex-col relative shadow-[0_0_60px_-15px_rgba(245,158,11,0.3)]">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="bg-amber-500 text-stone-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">
                   Most popular
                 </span>
               </div>
 
-              <div className="mb-5">
-                <div className="text-stone-100 font-bold text-base mb-1">$29 Monthly</div>
-                <p className="text-stone-300 text-sm">Access to all features plus unlimited AI &amp; free monthly review.</p>
+              <div className="mb-3">
+                <div className="text-stone-100 font-bold text-sm mb-0.5">$29 Monthly</div>
+                <p className="text-stone-300 text-xs">All features + unlimited AI &amp; free monthly review.</p>
               </div>
-              <div className="border-t border-amber-500/20 pt-6 mb-6 flex-1">
-                <div className="flex items-baseline gap-2 mb-1">
-                  <div className="text-5xl font-black text-stone-100" style={{ fontFamily: 'var(--font-serif)' }}>Pro</div>
-                </div>
-                <ul className="space-y-2.5 mt-6">
+              <div className="border-t border-amber-500/20 pt-3 mb-3 flex-1">
+                <div className="text-3xl font-black text-stone-100 mb-3" style={{ fontFamily: 'var(--font-serif)' }}>Pro</div>
+                <ul className="space-y-1.5">
                   {PRO.map((f) => (
-                    <li key={f} className="flex items-center gap-2.5 text-sm text-stone-200">
-                      <CheckCircle className="w-4 h-4 text-amber-500 flex-shrink-0" /> {f}
+                    <li key={f} className="flex items-center gap-2 text-xs text-stone-200">
+                      <CheckCircle className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" /> {f}
                     </li>
                   ))}
                 </ul>
               </div>
               <ProCTA />
-              <div className="flex items-center justify-center gap-1.5 text-stone-400 text-xs mt-3">
-                <ShieldCheck className="w-3.5 h-3.5 text-green-500" />
+              <div className="flex items-center justify-center gap-1 text-stone-400 text-[10px] mt-2">
+                <ShieldCheck className="w-3 h-3 text-green-500" />
                 100% money-back guarantee
               </div>
             </div>
 
             {/* Lifetime */}
-            <div className="bg-stone-900 border border-stone-800 rounded-2xl p-7 flex flex-col">
-              <div className="mb-5">
-                <div className="text-stone-300 font-bold text-base mb-1">$149 One-Time</div>
-                <p className="text-stone-500 text-sm">Access to all features with a one-time payment.</p>
+            <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5 flex flex-col">
+              <div className="mb-3">
+                <div className="text-stone-300 font-bold text-sm mb-0.5">$149 One-Time</div>
+                <p className="text-stone-500 text-xs">One payment, lifetime access.</p>
               </div>
-              <div className="border-t border-stone-800 pt-6 mb-6 flex-1">
-                <div className="text-5xl font-black text-stone-100 mb-1" style={{ fontFamily: 'var(--font-serif)' }}>Lifetime</div>
-                <ul className="space-y-2.5 mt-6">
+              <div className="border-t border-stone-800 pt-3 mb-3 flex-1">
+                <div className="text-3xl font-black text-stone-100 mb-3" style={{ fontFamily: 'var(--font-serif)' }}>Lifetime</div>
+                <ul className="space-y-1.5">
                   {LIFETIME.map((f) => (
-                    <li key={f} className="flex items-center gap-2.5 text-sm text-stone-300">
-                      <CheckCircle className="w-4 h-4 text-amber-500 flex-shrink-0" /> {f}
+                    <li key={f} className="flex items-center gap-2 text-xs text-stone-300">
+                      <CheckCircle className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" /> {f}
                     </li>
                   ))}
                 </ul>
               </div>
               <LifetimeCTA />
-              <div className="flex items-center justify-center gap-1.5 text-stone-400 text-xs mt-3">
-                <ShieldCheck className="w-3.5 h-3.5 text-green-500" />
+              <div className="flex items-center justify-center gap-1 text-stone-400 text-[10px] mt-2">
+                <ShieldCheck className="w-3 h-3 text-green-500" />
                 100% money-back guarantee
               </div>
             </div>
           </div>
 
-          <p className="text-center text-stone-600 text-xs mt-10 max-w-2xl mx-auto">
+          <p className="text-center text-stone-600 text-[10px] mt-4 max-w-2xl mx-auto">
             Pro and Lifetime are personal plans. Subject to our <Link href="/terms" className="text-stone-500 hover:text-stone-300 underline">Cancellation Policy</Link>.
           </p>
         </section>
