@@ -6,6 +6,7 @@ import ExitIntent from './ExitIntent'
 import StickyBar from './StickyBar'
 import HomePageView from './HomePageView'
 import { BuildResumeButton, SeeHowItWorksButton, NavBuildButton, FinalCTAButton, SparkleCTAButton } from './HomeCTA'
+import DiscountPopup from './DiscountPopup'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -545,6 +546,7 @@ export default function Home() {
       </main>
       <ExitIntent />
       <StickyBar />
+      <DiscountPopup />
     </>
   )
 }

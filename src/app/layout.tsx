@@ -9,7 +9,9 @@ import "./globals.css";
 const jakarta = Plus_Jakarta_Sans({ variable: "--font-jakarta", subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
 const dmSerif = DM_Serif_Display({ variable: "--font-serif", subsets: ["latin"], weight: ["400"], style: ["normal", "italic"] });
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://resumegenius.guru";
+// Always provide a valid URL so local builds (without NEXT_PUBLIC_APP_URL) don't crash
+const RAW = process.env.NEXT_PUBLIC_APP_URL?.trim();
+const APP_URL = RAW && RAW.startsWith('http') ? RAW : 'https://resumegenius.guru';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
