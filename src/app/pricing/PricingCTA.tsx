@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { ArrowRight, Loader2, Sparkles } from 'lucide-react'
 import { rdtTrack } from '@/lib/rdt'
 import { ttqTrack } from '@/lib/ttq'
+import posthog from 'posthog-js'
 import Link from 'next/link'
 
 async function goToCheckout(opts: { mode: 'payment' | 'subscription' | 'lifetime-trial' | 'one-resume'; value: number; trial?: boolean }) {
@@ -22,6 +23,16 @@ async function goToCheckout(opts: { mode: 'payment' | 'subscription' | 'lifetime
   ttqTrack('AddToCart', { contents, value: opts.value, currency: 'USD' })
   ttqTrack('InitiateCheckout', { contents, value: opts.value, currency: 'USD' })
   ttqTrack('AddPaymentInfo', { contents, value: opts.value, currency: 'USD' })
+  // PostHog — funnel + product analytics
+  try {
+    posthog.capture('pricing_cta_clicked', {
+      product_id: productId,
+      product_name: productName,
+      value: opts.value,
+      mode: opts.mode,
+      trial: opts.trial ?? false,
+    })
+  } catch {}
   const res = await fetch('/api/stripe/checkout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

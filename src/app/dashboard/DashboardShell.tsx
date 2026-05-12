@@ -14,6 +14,7 @@ import TemplateThumbnail from '@/components/resume/TemplateThumbnail'
 import type { TemplateId } from '@/types/resume'
 import { ttqIdentify, ttqTrack } from '@/lib/ttq'
 import Clarity from '@microsoft/clarity'
+import posthog from 'posthog-js'
 
 type ResumeCard = {
   id: string
@@ -155,6 +156,10 @@ export default function DashboardShell({ user, initialResumes }: Props) {
     try {
       Clarity.identify(user.id, undefined, undefined, user.name ?? user.email)
       Clarity.setTag('plan', 'free')
+    } catch {}
+
+    try {
+      posthog.identify(user.id, { email: user.email, name: user.name })
     } catch {}
 
     const firedKey = `tt_complete_reg_${user.id}`

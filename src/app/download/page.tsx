@@ -9,6 +9,7 @@ import { Logo } from '@/components/Logo'
 import type { Resume } from '@/types/resume'
 import { rdtTrack } from '@/lib/rdt'
 import { ttqTrack } from '@/lib/ttq'
+import posthog from 'posthog-js'
 
 const PDFDownloadLink = dynamic(
   () => import('@react-pdf/renderer').then((m) => m.PDFDownloadLink),
@@ -34,6 +35,12 @@ function DownloadInner() {
       .then(data => {
         setVerified(!!data.valid)
         if (data.valid) {
+          try {
+            posthog.capture('purchase_completed', {
+              session_id: sessionId,
+              currency: 'USD',
+            })
+          } catch {}
           rdtTrack('Purchase', { currency: 'USD', conversionId: sessionId })
           ttqTrack('Purchase', {
             contents: [{ content_id: 'resumegenius_pro', content_type: 'product', content_name: 'ResumeGenius' }],
