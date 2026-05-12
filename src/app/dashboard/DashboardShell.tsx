@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { signOut } from 'next-auth/react'
 import {
   Plus, Trash2, FileText, LogOut, ChevronDown,
-  MoreHorizontal, Pencil, Download, Clock, User, Sparkles, X, ArrowRight, Loader2, Settings
+  MoreHorizontal, Pencil, Download, Clock, Sparkles, X, ArrowRight, Loader2, Settings,
+  Brain, Shield, LayoutTemplate, Lightbulb, Crown, LayoutGrid, List as ListIcon
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -46,6 +47,20 @@ function Initials({ name, email }: { name: string | null; email: string }) {
   const parts = src.split(/[\s@]/).filter(Boolean)
   const letters = parts.length >= 2 ? parts[0][0] + parts[1][0] : src.slice(0, 2)
   return <span className="text-sm font-bold text-stone-950 uppercase">{letters}</span>
+}
+
+function FeaturePill({ icon: Icon, title, sub }: { icon: React.ComponentType<{ className?: string }>; title: string; sub: string }) {
+  return (
+    <div className="flex items-start gap-2.5 bg-stone-950/40 border border-stone-800/60 rounded-xl px-3 py-2.5">
+      <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <Icon className="w-3.5 h-3.5 text-amber-400" />
+      </div>
+      <div className="min-w-0">
+        <div className="text-stone-200 text-xs font-bold leading-tight">{title}</div>
+        <div className="text-stone-500 text-[10px] leading-tight mt-0.5">{sub}</div>
+      </div>
+    </div>
+  )
 }
 
 function CardMenu({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
@@ -254,46 +269,102 @@ export default function DashboardShell({ user, initialResumes }: Props) {
         </div>
       </header>
 
-      <main className="flex-1 px-6 py-10 max-w-6xl mx-auto w-full">
-        {/* Welcome banner */}
-        <div className="relative rounded-2xl overflow-hidden bg-stone-900 border border-stone-800 px-8 py-7 mb-10">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(245,158,11,0.06),transparent_60%)]" />
-          <div className="relative flex items-center justify-between">
+      <main className="flex-1 px-4 sm:px-6 py-6 sm:py-10 max-w-6xl mx-auto w-full">
+        {/* Welcome banner — premium gradient with ATS score graphic */}
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-amber-950/40 via-stone-900 to-stone-950 border border-amber-500/20 mb-8 sm:mb-10">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(245,158,11,0.18),transparent_60%)] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.08),transparent_70%)] pointer-events-none" />
+
+          <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 p-6 sm:p-10">
+            {/* Left: Greeting + features */}
             <div>
-              <p className="text-stone-500 text-sm mb-1">{greeting}</p>
-              <h1 className="text-2xl text-stone-100 capitalize" style={{ fontFamily: 'var(--font-serif)' }}>{firstName}</h1>
-              <div className="flex items-center gap-4 mt-3">
-                <div className="flex items-center gap-1.5 text-stone-500 text-xs">
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>{resumes.length} resume{resumes.length !== 1 ? 's' : ''}</span>
+              <p className="text-amber-400 text-sm font-semibold mb-2">{greeting},</p>
+              <h1 className="text-3xl sm:text-5xl text-stone-100 capitalize mb-3 leading-tight font-bold tracking-tight">
+                {firstName}
+              </h1>
+              <p className="text-stone-200 text-base sm:text-lg font-medium mb-1">Ready to land your next opportunity?</p>
+              <p className="text-stone-500 text-sm mb-6 sm:mb-7">Create a standout resume in minutes with AI-powered suggestions.</p>
+
+              {/* Feature pills */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+                <FeaturePill icon={Brain} title="AI-Powered" sub="Smart suggestions" />
+                <FeaturePill icon={Shield} title="ATS-Optimized" sub="Pass applicant tracking" />
+                <FeaturePill icon={LayoutTemplate} title="Professional Templates" sub="Designed to impress" />
+                <FeaturePill icon={Lightbulb} title="Expert Tips" sub="Guidance at every step" />
+              </div>
+
+              <Button
+                onClick={handleNew}
+                disabled={creating}
+                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold h-11 px-5 gap-2 shadow-[0_0_30px_-5px_rgba(245,158,11,0.5)]"
+              >
+                <Plus className="w-4 h-4" />
+                {creating ? 'Creating…' : 'New Resume'}
+              </Button>
+            </div>
+
+            {/* Right: Resume stack + ATS score */}
+            <div className="hidden md:flex items-center justify-center relative">
+              <div className="relative w-[260px] h-[280px]">
+                {/* Stacked papers */}
+                <div className="absolute top-2 left-4 w-[200px] h-[260px] bg-stone-200 rounded-md shadow-lg rotate-[-4deg] opacity-30" />
+                <div className="absolute top-0 left-0 w-[200px] h-[260px] bg-stone-100 rounded-md shadow-2xl" />
+                {/* Resume preview content */}
+                <div className="absolute top-0 left-0 w-[200px] h-[260px] rounded-md overflow-hidden p-4 text-[7px] text-stone-700 font-serif">
+                  <div className="text-center mb-2 pb-1.5 border-b border-stone-300">
+                    <div className="font-bold text-[9px] tracking-widest">ALEX JOHNSON</div>
+                    <div className="text-[6px] text-stone-500 mt-0.5">Software Engineer</div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <div className="h-1 bg-stone-300 rounded-full w-3/4" />
+                    <div className="h-1 bg-stone-300 rounded-full" />
+                    <div className="h-1 bg-stone-300 rounded-full w-5/6" />
+                    <div className="h-px bg-stone-300 my-2" />
+                    <div className="h-1 bg-stone-300 rounded-full w-2/3" />
+                    <div className="h-1 bg-stone-300 rounded-full" />
+                    <div className="h-1 bg-stone-300 rounded-full w-4/5" />
+                  </div>
                 </div>
-                <div className="w-1 h-1 rounded-full bg-stone-700" />
-                <div className="flex items-center gap-1.5 text-stone-500 text-xs">
-                  <User className="w-3.5 h-3.5" />
-                  <span>Free plan</span>
+                {/* ATS Score gauge — top right overlay */}
+                <div className="absolute -top-2 -right-6">
+                  <div className="relative w-20 h-20">
+                    <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
+                      <circle cx="40" cy="40" r="34" fill="rgba(28,25,23,0.95)" stroke="rgba(55,55,55,0.5)" strokeWidth="4" />
+                      <circle
+                        cx="40" cy="40" r="34" fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round"
+                        strokeDasharray={`${(98 / 100) * 2 * Math.PI * 34} ${2 * Math.PI * 34}`}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-stone-100 text-xl font-bold leading-none">98</span>
+                      <span className="text-stone-500 text-[8px] uppercase tracking-wider mt-0.5">ATS Score</span>
+                      <span className="text-emerald-400 text-[8px] font-semibold mt-0.5">Excellent</span>
+                    </div>
+                  </div>
                 </div>
-                <Link href="/checkout" className="text-amber-500 text-xs hover:text-amber-400 transition-colors font-medium">
-                  Upgrade →
-                </Link>
               </div>
             </div>
-            <Button
-              onClick={handleNew}
-              disabled={creating}
-              className="hidden sm:flex bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold h-10 px-5 gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              {creating ? 'Creating…' : 'New Resume'}
-            </Button>
           </div>
         </div>
 
         {/* Resume grid */}
         <div>
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-stone-100 font-bold text-lg">My Resumes</h2>
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-5 gap-3">
+            <div>
+              <h2 className="text-stone-100 font-bold text-2xl sm:text-3xl" style={{ fontFamily: 'var(--font-serif)' }}>My Resumes</h2>
+              <p className="text-stone-500 text-sm mt-1">Manage and track your resumes all in one place.</p>
+            </div>
             {resumes.length > 0 && (
-              <span className="text-stone-600 text-sm">{resumes.length} total</span>
+              <div className="flex items-center gap-2">
+                <span className="text-stone-500 text-sm">{resumes.length} Total</span>
+                <div className="inline-flex items-center gap-2 bg-stone-900 border border-stone-800 rounded-lg px-3 py-1.5 text-stone-400 text-xs">
+                  Recently updated <ChevronDown className="w-3 h-3" />
+                </div>
+                <div className="inline-flex items-center bg-stone-900 border border-stone-800 rounded-lg overflow-hidden">
+                  <button className="bg-amber-500/15 text-amber-400 p-1.5"><LayoutGrid className="w-3.5 h-3.5" /></button>
+                  <button className="text-stone-600 hover:text-stone-300 p-1.5"><ListIcon className="w-3.5 h-3.5" /></button>
+                </div>
+              </div>
             )}
           </div>
 
@@ -383,6 +454,24 @@ export default function DashboardShell({ user, initialResumes }: Props) {
               </button>
             </div>
           )}
+        </div>
+
+        {/* Unlock Premium Features banner */}
+        <div className="mt-10 sm:mt-14 bg-gradient-to-r from-stone-900 via-amber-950/20 to-stone-900 border border-amber-500/20 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center flex-shrink-0 shadow-[0_0_24px_-5px_rgba(245,158,11,0.6)]">
+              <Crown className="w-5 h-5 text-stone-950" />
+            </div>
+            <div>
+              <h3 className="text-stone-100 font-bold text-base sm:text-lg">Unlock Premium Features</h3>
+              <p className="text-stone-500 text-xs sm:text-sm mt-0.5">Get access to premium templates, AI assistance, and advanced features.</p>
+            </div>
+          </div>
+          <Link href="/pricing">
+            <Button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold h-10 px-5 gap-2 whitespace-nowrap">
+              <Crown className="w-4 h-4" /> Upgrade Now
+            </Button>
+          </Link>
         </div>
       </main>
 
