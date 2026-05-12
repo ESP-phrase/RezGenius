@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { signOut } from 'next-auth/react'
 import {
   Plus, Trash2, FileText, LogOut, ChevronDown,
-  MoreHorizontal, Pencil, Download, Clock, User, Sparkles, X, ArrowRight, Loader2
+  MoreHorizontal, Pencil, Download, Clock, User, Sparkles, X, ArrowRight, Loader2, Settings
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -108,6 +108,9 @@ function UserMenu({ user }: { user: Props['user'] }) {
             <div className="text-stone-500 text-xs truncate">{user.email}</div>
           </div>
           <div className="py-1">
+            <Link href="/dashboard/settings" className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-stone-200 hover:bg-stone-700 transition-colors">
+              <Settings className="w-3.5 h-3.5 text-stone-400" /> Settings
+            </Link>
             <Link href="/checkout" className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-stone-200 hover:bg-stone-700 transition-colors">
               <Download className="w-3.5 h-3.5 text-stone-400" /> Billing & Plans
             </Link>
