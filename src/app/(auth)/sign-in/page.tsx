@@ -136,7 +136,7 @@ function SignInInner() {
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500/70 pointer-events-none" />
                   <input
                     type="email"
-                    placeholder="aubreynicholsacc@gmail.com"
+                    placeholder="you@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
