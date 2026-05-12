@@ -5,7 +5,6 @@ import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import { Loader2, Mail, ArrowRight, CheckCircle, AlertCircle, Link as LinkIcon, Shield, Clock, Lock, User as UserIcon } from 'lucide-react'
 import { Logo } from '@/components/Logo'
-import Link from 'next/link'
 import { ttqIdentify, ttqTrack } from '@/lib/ttq'
 
 function Sparkle({ className = '' }: { className?: string }) {
@@ -324,17 +323,6 @@ function SignInInner() {
                 </button>
               </form>
             )}
-
-            {/* Continue as guest */}
-            <div className="mt-5 pt-5 border-t border-stone-800/60">
-              <Link
-                href="/builder"
-                className="block text-center text-stone-500 hover:text-amber-400 text-sm font-medium py-2 transition-colors"
-              >
-                or continue as guest →
-              </Link>
-              <p className="text-stone-700 text-[10px] text-center mt-1">Build your resume without an account. Sign in later to save.</p>
-            </div>
 
             {/* Trust signals — only on magic-link primary view */}
             {tab === 'signin' && mode === 'choose' && (
