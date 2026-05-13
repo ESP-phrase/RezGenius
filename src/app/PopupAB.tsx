@@ -94,9 +94,9 @@ export default function PopupAB() {
   if (modeParam === 'coupon') return <DiscountPopup />
   if (modeParam === 'instant') return <ExitIntent />
 
-  // === DEFAULT 50/50 A/B ===
-  if (variant === 'coupon_save25') return <DiscountPopup />
-  return <ExitIntent />
+  // === DEFAULT: no popup. Less aggressive, higher mobile engagement.
+  // Override via ?popup=coupon, ?popup=instant, ?popup=banner, or ?popup=delay
+  return null
 }
 
 /** Variant that shows the assigned popup but only after 30s of dwell time */
