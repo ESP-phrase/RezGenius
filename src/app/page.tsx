@@ -163,6 +163,7 @@ export default function Home() {
             </button>
           </div>
           <div className="flex items-center gap-2 sm:gap-5">
+            <Link href="/pricing" className="lg:hidden text-stone-300 hover:text-stone-100 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap">Pricing</Link>
             <Link href="/sign-in" className="text-stone-300 hover:text-stone-100 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap">Sign in</Link>
             <NavBuildButton />
           </div>

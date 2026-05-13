@@ -16,6 +16,7 @@ import ResumePreview from './ResumePreview'
 import TemplateThumbnail from './TemplateThumbnail'
 import PhotoUploader from './PhotoUploader'
 import SaveYourWorkPrompt from './SaveYourWorkPrompt'
+import QuickCheckoutFAB from './QuickCheckoutFAB'
 
 const EMPTY_RESUME: Resume = {
   personalInfo: { name: '', email: '', phone: '', location: '', linkedin: '', website: '', summary: '' },
@@ -583,6 +584,9 @@ export default function ResumeBuilder() {
 
       {/* Save-your-work prompt for anonymous users */}
       <SaveYourWorkPrompt resume={resume} isAnonymous={!resumeId} />
+
+      {/* Always-visible checkout FAB so users can ATC from any step */}
+      <QuickCheckoutFAB />
     </div>
   )
 }

@@ -250,6 +250,9 @@ export default function DashboardShell({ user, initialResumes }: Props) {
       <header className="sticky top-0 z-40 bg-stone-950/90 backdrop-blur-md border-b border-stone-800/60 px-3 sm:px-6 py-3 flex items-center justify-between gap-2">
         <Logo size="md" />
         <div className="flex items-center gap-2 sm:gap-3">
+          <Link href="/pricing" className="text-amber-400 hover:text-amber-300 text-xs sm:text-sm font-bold transition-colors whitespace-nowrap">
+            Pricing
+          </Link>
           {/* AI Generate — icon-only on mobile, full on desktop */}
           <button
             onClick={() => setShowPrompt(true)}
