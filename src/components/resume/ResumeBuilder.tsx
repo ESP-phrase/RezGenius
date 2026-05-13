@@ -15,6 +15,7 @@ import { Sparkles, Plus, Trash2, ChevronRight, ChevronLeft, Download, Loader2, C
 import ResumePreview from './ResumePreview'
 import TemplateThumbnail from './TemplateThumbnail'
 import PhotoUploader from './PhotoUploader'
+import SaveYourWorkPrompt from './SaveYourWorkPrompt'
 
 const EMPTY_RESUME: Resume = {
   personalInfo: { name: '', email: '', phone: '', location: '', linkedin: '', website: '', summary: '' },
@@ -579,6 +580,9 @@ export default function ResumeBuilder() {
 
       {/* Mobile-only floating preview button */}
       <MobilePreviewSheet resume={resume} templateId={templateId} />
+
+      {/* Save-your-work prompt for anonymous users */}
+      <SaveYourWorkPrompt resume={resume} isAnonymous={!resumeId} />
     </div>
   )
 }

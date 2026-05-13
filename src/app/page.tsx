@@ -8,6 +8,7 @@ import { BuildResumeButton, SeeHowItWorksButton, NavBuildButton, FinalCTAButton,
 import PopupAB from './PopupAB'
 import HeroEmailCapture from './HeroEmailCapture'
 import HeroMockupSlot from './HeroMockupSlot'
+import HeroAIDemo from './HeroAIDemo'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -195,13 +196,13 @@ export default function Home() {
                 You&apos;re more impressive than your current resume shows. ResumeGenius rewrites your experience into powerful, impactful language that gets responses — polished PDF in minutes.
               </p>
 
-              {/* Email capture as primary CTA */}
-              <HeroEmailCapture />
+              {/* Live AI demo — show before tell, no email gate */}
+              <HeroAIDemo />
 
               {/* Secondary: see how it works (text link only) */}
-              <div className="text-center md:text-left mb-10">
+              <div className="text-center md:text-left mb-8">
                 <a href="#how-it-works" className="text-stone-500 hover:text-amber-400 text-sm transition-colors inline-flex items-center gap-1.5">
-                  ▶ See how it works first
+                  ▶ See how it works
                 </a>
               </div>
 
