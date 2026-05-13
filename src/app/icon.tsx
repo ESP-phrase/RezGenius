@@ -3,6 +3,9 @@ import { ImageResponse } from 'next/og'
 export const size = { width: 32, height: 32 }
 export const contentType = 'image/png'
 
+/**
+ * Browser tab favicon (32x32). Spark mark on dark amber-tinted background.
+ */
 export default function Icon() {
   return new ImageResponse(
     (
@@ -14,15 +17,13 @@ export default function Icon() {
           alignItems: 'center',
           justifyContent: 'center',
           background: '#0C0A09',
-          borderRadius: 6,
+          borderRadius: 7,
         }}
       >
-        <svg viewBox="0 0 22 26" width="22" height="26" fill="none">
-          <path d="M0 0h16l6 6v20H0V0z" fill="#292524" stroke="#57534E" strokeWidth="1" strokeLinejoin="round" />
-          <path d="M16 0l6 6h-6V0z" fill="#F59E0B" />
-          <line x1="3.5" y1="11" x2="18.5" y2="11" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" />
-          <line x1="3.5" y1="15" x2="18.5" y2="15" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" />
-          <line x1="3.5" y1="19" x2="12" y2="19" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" />
+        <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+          <circle cx="16" cy="16" r="15" fill="#F59E0B" fillOpacity="0.18" />
+          <path d="M16 4 L19.5 13.5 L29 16 L19.5 18.5 L16 28 L12.5 18.5 L3 16 L12.5 13.5 Z" fill="#F59E0B" />
+          <path d="M16 8 L18.2 14.8 L24 16 L18.2 17.2 L16 24 L13.8 17.2 L8 16 L13.8 14.8 Z" fill="#FDE68A" fillOpacity="0.6" />
         </svg>
       </div>
     ),
