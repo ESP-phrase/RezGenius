@@ -151,7 +151,7 @@ export default function Home() {
       <main className="min-h-screen bg-stone-950">
 
         {/* Nav */}
-        <nav className="border-b border-stone-800/60 px-4 sm:px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
+        <nav className="border-b border-stone-800/60 px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between max-w-7xl mx-auto w-full gap-2">
           <Logo size="lg" />
           {/* Center nav (desktop only) */}
           <div className="hidden lg:flex items-center gap-8">
@@ -161,8 +161,8 @@ export default function Home() {
               Resources <ChevronDown className="w-3.5 h-3.5" />
             </button>
           </div>
-          <div className="flex items-center gap-3 sm:gap-5">
-            <Link href="/sign-in" className="text-stone-300 hover:text-stone-100 text-sm font-medium transition-colors">Sign in</Link>
+          <div className="flex items-center gap-2 sm:gap-5">
+            <Link href="/sign-in" className="text-stone-300 hover:text-stone-100 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap">Sign in</Link>
             <NavBuildButton />
           </div>
         </nav>

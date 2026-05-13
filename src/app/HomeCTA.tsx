@@ -46,9 +46,11 @@ export function SeeHowItWorksButton() {
 
 export function NavBuildButton() {
   return (
-    <Link href="/start" onClick={() => fireSignupEvents('Nav Button')}>
-      <button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-lg transition-colors inline-flex items-center gap-1.5 whitespace-nowrap">
-        Build My Resume <ArrowRight className="w-3.5 h-3.5" />
+    <Link href="/builder" onClick={() => fireSignupEvents('Nav Button')}>
+      <button className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-colors inline-flex items-center gap-1 sm:gap-1.5 whitespace-nowrap">
+        <span className="sm:hidden">Build</span>
+        <span className="hidden sm:inline">Build My Resume</span>
+        <ArrowRight className="w-3.5 h-3.5" />
       </button>
     </Link>
   )
