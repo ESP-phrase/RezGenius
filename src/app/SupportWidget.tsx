@@ -56,7 +56,7 @@ export default function SupportWidget() {
         <button
           onClick={() => setOpen(true)}
           aria-label="Get help"
-          className="fixed bottom-5 left-5 z-[55] w-12 h-12 rounded-full bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-[0_8px_30px_-5px_rgba(245,158,11,0.6)] flex items-center justify-center transition-all hover:scale-105"
+          className="fixed bottom-20 sm:bottom-5 left-3 sm:left-5 z-[55] w-12 h-12 rounded-full bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-[0_8px_30px_-5px_rgba(245,158,11,0.6)] flex items-center justify-center transition-all hover:scale-105"
         >
           <MessageCircle className="w-5 h-5" />
         </button>
@@ -64,7 +64,7 @@ export default function SupportWidget() {
 
       {/* Open panel */}
       {open && (
-        <div className="fixed bottom-5 left-5 z-[55] w-[340px] max-w-[calc(100vw-2.5rem)] animate-in slide-in-from-bottom-2 fade-in duration-200">
+        <div className="fixed bottom-20 sm:bottom-5 left-3 sm:left-5 z-[55] w-[340px] max-w-[calc(100vw-1.5rem)] animate-in slide-in-from-bottom-2 fade-in duration-200">
           <div className="bg-stone-900 border border-stone-700 rounded-2xl shadow-2xl overflow-hidden">
             {/* Header */}
             <div className="px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-stone-950 flex items-center justify-between">

@@ -71,7 +71,7 @@ function AtsScore({ value = 96 }: { value?: number }) {
 
 function ResumeMockup() {
   return (
-    <div className="relative w-full max-w-md">
+    <div className="relative w-full max-w-[280px] sm:max-w-sm md:max-w-md mx-auto">
       {/* Soft amber glow halo behind the device */}
       <div className="absolute inset-0 -m-10 bg-amber-500/10 blur-3xl rounded-full pointer-events-none" />
       {/* Outer dark frame */}
@@ -177,7 +177,7 @@ export default function Home() {
               </div>
 
               {/* Heading — sans-serif bold like reference */}
-              <h1 className="font-extrabold text-stone-100 text-[44px] sm:text-[60px] md:text-[68px] leading-[1.02] tracking-tight mb-6">
+              <h1 className="font-extrabold text-stone-100 text-[32px] sm:text-[44px] md:text-[60px] lg:text-[68px] leading-[1.05] tracking-tight mb-5 sm:mb-6">
                 The resume that
                 <br />
                 <span className="relative inline-block">
@@ -205,7 +205,7 @@ export default function Home() {
               </div>
 
               {/* Stats grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 max-w-2xl">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5 max-w-2xl">
                 <Stat icon={Clock} value="5 min" label="average to finish" />
                 <Stat icon={Star} value="4.9★" label="3,100+ reviews" />
                 <Stat icon={DollarSign} value="$1" label="7-day trial" />

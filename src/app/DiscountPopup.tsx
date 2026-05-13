@@ -89,7 +89,7 @@ export default function DiscountPopup() {
   if (!open) return null
 
   return (
-    <div className="fixed bottom-5 right-5 z-[60] w-[340px] max-w-[calc(100vw-2.5rem)] animate-in slide-in-from-bottom-2 fade-in duration-300">
+    <div className="fixed bottom-20 sm:bottom-5 right-3 sm:right-5 z-[60] w-[340px] max-w-[calc(100vw-1.5rem)] animate-in slide-in-from-bottom-2 fade-in duration-300">
       <div className="relative bg-gradient-to-br from-stone-900 to-stone-950 border border-amber-500/40 rounded-2xl p-5 shadow-[0_25px_80px_-15px_rgba(245,158,11,0.4)]">
         <div className="absolute -top-px left-8 right-8 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
 

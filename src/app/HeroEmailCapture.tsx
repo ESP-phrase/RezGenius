@@ -72,14 +72,14 @@ export default function HeroEmailCapture() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="Enter your email to start"
-            className="w-full h-12 sm:h-14 pl-11 pr-4 bg-stone-900/80 border border-stone-700 rounded-xl text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/10 text-sm sm:text-base transition-all"
+            placeholder="Your email"
+            className="w-full h-12 sm:h-14 pl-10 sm:pl-11 pr-3 bg-stone-900/80 border border-stone-700 rounded-xl text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/10 text-sm sm:text-base transition-all"
           />
         </div>
         <button
           type="submit"
           disabled={loading || !email.trim()}
-          className="h-12 sm:h-14 inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm sm:text-base px-6 sm:px-7 rounded-xl transition-colors shadow-[0_0_40px_-10px_rgba(245,158,11,0.6)] disabled:opacity-50 whitespace-nowrap"
+          className="h-12 sm:h-14 inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm sm:text-base px-4 sm:px-7 rounded-xl transition-colors shadow-[0_0_40px_-10px_rgba(245,158,11,0.6)] disabled:opacity-50 sm:whitespace-nowrap"
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
           {loading ? 'Starting…' : <>Get My Resume <ArrowRight className="w-4 h-4" /></>}
