@@ -214,7 +214,8 @@ export default function Home() {
               </div>
             </div>
             <HeroMockupSlot>
-              <div className="flex justify-center order-1 md:order-2">
+              {/* Hidden on mobile by default — too much vertical space above the email CTA */}
+              <div className="hidden md:flex justify-center order-1 md:order-2">
                 <ResumeMockup />
               </div>
             </HeroMockupSlot>
