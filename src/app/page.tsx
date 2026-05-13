@@ -7,6 +7,7 @@ import HomePageView from './HomePageView'
 import { BuildResumeButton, SeeHowItWorksButton, NavBuildButton, FinalCTAButton, SparkleCTAButton } from './HomeCTA'
 import PopupAB from './PopupAB'
 import HeroEmailCapture from './HeroEmailCapture'
+import HeroMockupSlot from './HeroMockupSlot'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -212,9 +213,11 @@ export default function Home() {
                 <Stat icon={Shield} value="100%" label="SATISFACTION GUARANTEE" caps />
               </div>
             </div>
-            <div className="flex justify-center order-1 md:order-2">
-              <ResumeMockup />
-            </div>
+            <HeroMockupSlot>
+              <div className="flex justify-center order-1 md:order-2">
+                <ResumeMockup />
+              </div>
+            </HeroMockupSlot>
           </div>
         </section>
 
