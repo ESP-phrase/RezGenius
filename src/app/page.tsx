@@ -173,11 +173,15 @@ export default function Home() {
         <section className="px-4 sm:px-6 pt-10 sm:pt-16 pb-12 sm:pb-20">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-12 lg:gap-16 items-center">
             <div className="text-center md:text-left order-2 md:order-1">
-              {/* Pill */}
-              <div className="inline-flex items-center gap-2 border border-stone-700/80 bg-stone-900/40 text-stone-300 text-[11px] sm:text-xs font-medium px-3.5 py-1.5 rounded-full mb-6 sm:mb-8">
+              {/* Pill — clickable, scrolls to testimonials */}
+              <a
+                href="#testimonials"
+                className="inline-flex items-center gap-2 border border-stone-700/80 hover:border-amber-500/50 bg-stone-900/40 hover:bg-stone-900/80 text-stone-300 hover:text-stone-100 text-[11px] sm:text-xs font-medium px-3.5 py-1.5 rounded-full mb-6 sm:mb-8 transition-all cursor-pointer"
+              >
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 Trusted by 10,000+ job seekers
-              </div>
+                <span className="text-amber-400">→</span>
+              </a>
 
               {/* Heading — sans-serif bold like reference */}
               <h1 className="font-extrabold text-stone-100 text-[32px] sm:text-[44px] md:text-[60px] lg:text-[68px] leading-[1.05] tracking-tight mb-5 sm:mb-6">
@@ -395,7 +399,7 @@ export default function Home() {
         </section>
 
         {/* Testimonials */}
-        <section className="py-16 sm:py-28 px-4 sm:px-6">
+        <section id="testimonials" className="py-16 sm:py-28 px-4 sm:px-6 scroll-mt-20">
           <div className="max-w-4xl mx-auto">
             <div className="mb-10 sm:mb-16">
               <div className="flex items-center gap-2 mb-4">
