@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { Sparkles, Loader2, ArrowRight, RotateCcw, CheckCircle } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { Sparkles, Loader2, ArrowRight, RotateCcw, CheckCircle, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { ttqTrack } from '@/lib/ttq'
 import { rdtTrack } from '@/lib/rdt'
@@ -28,11 +28,14 @@ export default function HeroAIDemo() {
   const [result, setResult] = useState('')
   const [loading, setLoading] = useState(false)
   const [hasTriedDemo, setHasTriedDemo] = useState(false)
+  const [error, setError] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   async function rewrite() {
     if (!bullet.trim() || loading) return
     setLoading(true)
     setResult('')
+    setError('')
     try {
       posthog.capture?.('hero_ai_demo_clicked', { bullet_length: bullet.length })
       ttqTrack('ViewContent', {
@@ -46,8 +49,8 @@ export default function HeroAIDemo() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bullet }),
       })
-      const data = await res.json()
-      if (data.enhanced) {
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.enhanced) {
         setResult(data.enhanced)
         setHasTriedDemo(true)
         try {
@@ -58,9 +61,20 @@ export default function HeroAIDemo() {
           })
           rdtTrack('Lead')
         } catch {}
+      } else {
+        setError(data?.error || 'Could not reach the AI right now — try again in a sec.')
+        try { posthog.capture?.('hero_ai_demo_failed', { status: res.status }) } catch {}
       }
-    } catch {}
+    } catch {
+      setError('Network hiccup — check your connection and try again.')
+      try { posthog.capture?.('hero_ai_demo_failed', { status: 'network' }) } catch {}
+    }
     setLoading(false)
+  }
+
+  function focusTextarea() {
+    textareaRef.current?.focus()
+    textareaRef.current?.select()
   }
 
   function tryAnother() {
@@ -72,10 +86,15 @@ export default function HeroAIDemo() {
   return (
     <div className="w-full md:max-w-lg mb-6">
       <div className="bg-stone-900/60 border border-stone-800 rounded-2xl p-4 sm:p-5 backdrop-blur-sm">
-        <div className="flex items-center gap-2 mb-3">
+        <button
+          type="button"
+          onClick={focusTextarea}
+          className="flex items-center gap-2 mb-3 cursor-pointer hover:opacity-80 transition-opacity"
+          aria-label="Focus the bullet field to try the AI"
+        >
           <Sparkles className="w-4 h-4 text-amber-400" />
           <span className="text-amber-400 text-xs font-bold uppercase tracking-wider">Try the AI — Free</span>
-        </div>
+        </button>
 
         {/* Quick sample picker */}
         {!result && (
@@ -97,13 +116,22 @@ export default function HeroAIDemo() {
         )}
 
         <textarea
+          ref={textareaRef}
           value={bullet}
-          onChange={(e) => { setBullet(e.target.value); setResult('') }}
+          onChange={(e) => { setBullet(e.target.value); setResult(''); setError('') }}
           rows={2}
           placeholder="Paste a weak resume bullet…"
           className="w-full bg-stone-950/60 border border-stone-700 rounded-lg px-3 py-2 text-stone-100 placeholder:text-stone-600 text-xs sm:text-sm leading-relaxed focus:outline-none focus:border-amber-500/50 resize-none transition-colors"
           disabled={loading}
         />
+
+        {/* Error state — fixes silent dead-click failure */}
+        {error && (
+          <div className="mt-2 flex items-start gap-1.5 text-[11px] text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-2.5 py-1.5">
+            <AlertCircle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
 
         {/* Result */}
         {result && (
