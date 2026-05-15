@@ -9,6 +9,7 @@ import SupportWidget from "./SupportWidget";
 import HeartbeatPing from "./HeartbeatPing";
 import AttributionTracker from "./AttributionTracker";
 import AdminOptOut from "./AdminOptOut";
+import IdleReengage from "./IdleReengage";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({ variable: "--font-jakarta", subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Providers>{children}</Providers>
         </PostHogProvider>
         <SupportWidget />
+        <IdleReengage />
         <Analytics />
       </body>
     </html>

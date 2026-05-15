@@ -181,22 +181,22 @@ export default function Home() {
                 <span className="text-amber-400">→</span>
               </a>
 
-              {/* Heading — sans-serif bold like reference */}
-              <h1 className="font-extrabold text-stone-100 text-[32px] sm:text-[44px] md:text-[60px] lg:text-[68px] leading-[1.05] tracking-tight mb-5 sm:mb-6">
-                The resume that
+              {/* Heading — punchier for TikTok traffic, benefit-led */}
+              <h1 className="font-extrabold text-stone-100 text-[34px] sm:text-[44px] md:text-[60px] lg:text-[68px] leading-[1.05] tracking-tight mb-4 sm:mb-6">
+                Rewrite your resume in
                 <br />
                 <span className="relative inline-block">
                   <span style={{ background: 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                    finally does you justice.
+                    60 seconds.
                   </span>
                   {/* Sparkle decoration */}
                   <Sparkles className="hidden md:block absolute -top-2 -right-8 w-7 h-7 text-amber-400" strokeWidth={2.5} />
                 </span>
               </h1>
 
-              {/* Subhead */}
-              <p className="text-stone-400 text-base sm:text-lg mb-7 leading-relaxed md:max-w-xl mx-auto md:mx-0">
-                You&apos;re more impressive than your current resume shows. ResumeGenius rewrites your experience into powerful, impactful language that gets responses — polished PDF in minutes.
+              {/* Subhead — tighter, action-led */}
+              <p className="text-stone-300 text-base sm:text-lg mb-5 sm:mb-7 leading-relaxed md:max-w-xl mx-auto md:mx-0">
+                Try the AI below — paste any weak bullet, watch it transform. <span className="text-stone-500">No email. No signup. 5 seconds.</span>
               </p>
 
               {/* Live AI demo — show before tell, no email gate */}
